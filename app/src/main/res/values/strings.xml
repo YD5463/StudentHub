@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">StudentHub</string>
+    <string name="app_name">My Application</string>
+    <string name="sub_title">Sell What You Don\'t Need</string>
+    <string name="login">Login</string>
+    <string name="signup">Signup</string>
 </resources>
