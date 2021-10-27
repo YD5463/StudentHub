@@ -19,21 +19,12 @@ public class AccountFragment extends Fragment {
     private AccountViewModel accountViewModel;
     private FragmentAccountBinding binding;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        accountViewModel =
-                new ViewModelProvider(this).get(AccountViewModel.class);
-
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         binding = FragmentAccountBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
         final TextView textView = binding.textNotifications;
-        accountViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+        accountViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
