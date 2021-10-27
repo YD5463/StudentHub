@@ -9,4 +9,7 @@
     <string name="app_logo">App Logo</string>
     <string name="forgot_password">Forgot Password…</string>
     <string name="register">Register</string>
+    <string name="title_activity_home">Home</string>
+    <string name="title_home">Home</string>
+    <string name="title_account">My account</string>
 </resources>
