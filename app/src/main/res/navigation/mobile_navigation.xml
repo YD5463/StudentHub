@@ -5,27 +5,32 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home">
 
+    <!--Home Fragment-->
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.myapplication.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
+    <!--New Post Fragment-->
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_newPost"
         android:name="com.example.myapplication.ui.posts.PostsFragment"
-        android:label="@string/title_account"
-        tools:layout="@layout/fragment_newpost" />
+        android:label="Add a new post"
+        tools:layout="@layout/fragment_new_post" />
 
+    <!--My Account Fragment-->
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_myAccount"
         android:name="com.example.myapplication.ui.account.AccountFragment"
         android:label="@string/title_account"
         tools:layout="@layout/fragment_account" >
         <action
-            android:id="@+id/action_navigation_notifications_to_myPostsFragment"
+            android:id="@+id/action_navigation_myAccount_to_myPostsFragment"
             app:destination="@id/myPostsFragment" />
     </fragment>
+
+    <!--My Posts Fragment-->
     <fragment
         android:id="@+id/myPostsFragment"
         android:name="com.example.myapplication.MyPostsFragment"
