@@ -1,5 +1,7 @@
 package com.example.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,6 +10,8 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Objects;
 
 
 public class Login extends AppCompatActivity {
@@ -19,21 +23,26 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         findViewById(R.id.login_btn).setOnClickListener(this::onLogin);
-
+        mAuth = FirebaseAuth.getInstance();
     }
     private void onLogin(View v){
         String email = ((TextView)findViewById(R.id.email_input)).getText().toString();
         String password = ((TextView)findViewById(R.id.password_input)).getText().toString();
-        Log.d(TAG,password);
-        Log.d(TAG,email);
+
+        ProgressDialog mDialog = new ProgressDialog(Login.this);
+        mDialog.setMessage("Please wait...");
+        mDialog.setCancelable(true);
+        mDialog.show();
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
+                    mDialog.cancel();
                     if (task.isSuccessful()) {
                         Log.d(TAG, "signInWithEmail:success");
                         FirebaseUser user = mAuth.getCurrentUser();
                     } else {
+//                        String cause = Objects.requireNonNull(task.getException()).getMessage();
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        Toast.makeText(Login.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, "Login Failed!", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
