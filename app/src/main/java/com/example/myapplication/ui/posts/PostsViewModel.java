@@ -10,7 +10,7 @@ public class PostsViewModel extends ViewModel {
 
     public PostsViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        mText.setValue("This is My Posts fragment");
     }
 
     public LiveData<String> getText() {
