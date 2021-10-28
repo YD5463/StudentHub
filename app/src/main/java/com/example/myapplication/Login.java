@@ -10,13 +10,12 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Email;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Password;
 
 
-public class Login extends FormValidator implements Validator.ValidationListener {
+public class Login extends FormValidator{
     static private final String TAG = "Login";
     private FirebaseAuth mAuth;
 

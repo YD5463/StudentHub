@@ -12,4 +12,6 @@
     <string name="title_activity_home">Home</string>
     <string name="title_home">Home</string>
     <string name="title_account">My account</string>
+    <string name="fullname">Full name</string>
+    <string name="profile_image">Profile Image</string>
 </resources>
