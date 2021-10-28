@@ -1,6 +1,5 @@
 package com.example.myapplication.ui.account;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -43,8 +40,10 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+
+        /*When the user clicks on the "My Posts" button in this fragment it navigates to MyPostsFragment*/
         if(v == btnMyPosts){
-            Navigation.findNavController(v).navigate(R.id.action_navigation_notifications_to_myPostsFragment);
+            Navigation.findNavController(v).navigate(R.id.action_navigation_myAccount_to_myPostsFragment);
         }
     }
 }
