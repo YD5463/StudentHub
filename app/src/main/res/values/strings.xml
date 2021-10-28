@@ -12,4 +12,8 @@
     <string name="title_activity_home">Home</string>
     <string name="title_home">Home</string>
     <string name="title_account">My account</string>
+    <string name="my_posts">My Posts</string>
+    <string name="my_preferences">My Preferences</string>
+    <string name="full_name">Full Name</string>
+    <string name="phone_number">Phone Number</string>
 </resources>
