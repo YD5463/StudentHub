@@ -17,6 +17,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            Intent goto_home = new Intent(getApplicationContext(),Home.class);
+            startActivity(goto_home);
+        }
     }
 
     @Override

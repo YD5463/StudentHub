@@ -1,7 +1,9 @@
 package com.example.myapplication;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -9,6 +11,7 @@ import android.widget.Toast;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mobsandgeeks.saripaar.annotation.Email;
@@ -66,9 +69,13 @@ public class Signup extends FormValidator {
                                 addOnCompleteListener(task1 -> {
 //                                  signUp_progress.setVisibility(View.GONE);
                                     Toast.makeText(Signup.this, "Successful Registered", Toast.LENGTH_SHORT).show();
+//                                    SharedPreferences sharedPref = Signup.this.getPreferences(Context.MODE_PRIVATE);
+//                                    SharedPreferences.Editor editor = sharedPref.edit();
+//                                    editor.putString(getString(R.string.user), newHighScore);
+//                                    editor.apply();
                                     Intent intent = new Intent(Signup.this, Home.class);
                                     startActivity(intent);
-                                    finish();
+
                                 });
                     } else {
 //                      signUp_progress.setVisibility(View.GONE);
