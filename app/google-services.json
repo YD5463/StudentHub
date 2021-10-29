@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "987151133833",
+    "firebase_url": "https://studenthub-cc800-default-rtdb.firebaseio.com",
     "project_id": "studenthub-cc800",
     "storage_bucket": "studenthub-cc800.appspot.com"
   },

@@ -1,7 +1,5 @@
 package com.example.myapplication;
 
-import androidx.annotation.NonNull;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,9 +8,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mobsandgeeks.saripaar.annotation.Email;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
@@ -35,16 +32,18 @@ public class Signup extends FormValidator {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_signup);
         init();
         signup_button.setOnClickListener(this::onSubmit);
         mAuth = FirebaseAuth.getInstance();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("UserData");
     }
     private void init(){
         email = findViewById(R.id.email_signup_input);
         password = findViewById(R.id.password_signup_input);
         fullname = findViewById(R.id.fullname_signup_input);
-        signup_button = findViewById(R.id.login_btn);
+        signup_button = findViewById(R.id.signup_btn);
     }
 
     @Override
@@ -59,22 +58,20 @@ public class Signup extends FormValidator {
         mDialog.show();
         mAuth.createUserWithEmailAndPassword(emailVal, passwordVal).addOnCompleteListener
                 (task -> {
+                    mDialog.cancel();
                     if (task.isSuccessful()) {
                         UserData data = new UserData(fullnameVal, emailVal, genderVal);
                         FirebaseDatabase.getInstance().getReference("UserData")
                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(data).
-                                addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-//                                        signUp_progress.setVisibility(View.GONE);
-                                        Toast.makeText(Signup.this, "Successful Registered", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(Signup.this, Home.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
+                                addOnCompleteListener(task1 -> {
+//                                  signUp_progress.setVisibility(View.GONE);
+                                    Toast.makeText(Signup.this, "Successful Registered", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(Signup.this, Home.class);
+                                    startActivity(intent);
+                                    finish();
                                 });
                     } else {
-//                        signUp_progress.setVisibility(View.GONE);
+//                      signUp_progress.setVisibility(View.GONE);
                         Toast.makeText(Signup.this, "Check Email id or Password", Toast.LENGTH_SHORT).show();
                     }
                 });

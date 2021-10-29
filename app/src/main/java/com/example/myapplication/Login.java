@@ -55,7 +55,7 @@ public class Login extends FormValidator{
                         Log.d(TAG, "signInWithEmail:success");
                         FirebaseUser user = mAuth.getCurrentUser();
                     } else {
-//                        String cause = Objects.requireNonNull(task.getException()).getMessage();
+//                      String cause = Objects.requireNonNull(task.getException()).getMessage();
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
                         Toast.makeText(Login.this, "Login Failed!", Toast.LENGTH_SHORT).show();
                     }
