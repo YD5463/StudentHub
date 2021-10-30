@@ -16,6 +16,9 @@
     <string name="title_activity_home">Home</string>
     <string name="title_home">Home</string>
     <string name="title_account">My account</string>
+    <string name="fullname">Full name</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="user">user</string>
 
     <!--My Account Fragment-->
     <string name="my_posts">My Posts</string>
