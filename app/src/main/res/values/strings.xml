@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="sub_title">Sell What You Don\'t Need</string>
+
+    <!--Login \ SignUp Activities-->
     <string name="login">Login</string>
     <string name="signup">Signup</string>
     <string name="email">Email</string>
@@ -9,10 +11,18 @@
     <string name="app_logo">App Logo</string>
     <string name="forgot_password">Forgot Password…</string>
     <string name="register">Register</string>
+
+
     <string name="title_activity_home">Home</string>
     <string name="title_home">Home</string>
     <string name="title_account">My account</string>
     <string name="fullname">Full name</string>
     <string name="profile_image">Profile Image</string>
     <string name="user">user</string>
+
+    <!--My Account Fragment-->
+    <string name="my_posts">My Posts</string>
+    <string name="my_preferences">My Preferences</string>
+    <string name="full_name">Full Name</string>
+    <string name="phone_number">Phone Number</string>
 </resources>

@@ -10,20 +10,20 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.myapplication.databinding.FragmentNewpostBinding;
+import com.example.myapplication.databinding.FragmentNewPostBinding;
 
 public class PostsFragment extends Fragment {
 
     private PostsViewModel postsViewModel;
-    private FragmentNewpostBinding binding;
+    private FragmentNewPostBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         postsViewModel = new ViewModelProvider(this).get(PostsViewModel.class);
 
-        binding = FragmentNewpostBinding.inflate(inflater, container, false);
+        binding = FragmentNewPostBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textDashboard;
+        final TextView textView = binding.textNewPostTitle;
         postsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
