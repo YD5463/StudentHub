@@ -13,12 +13,17 @@
     >
 
     <ImageView
+        android:id="@+id/profile_image_picker"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="30dp"
         android:src="@drawable/ic_launcher_foreground"
-        android:contentDescription="@string/profile_image" />
+        android:contentDescription="@string/profile_image"
+        android:clickable="true"
+        android:focusable="true"
+        />
+
     <EditText
         android:id="@+id/email_signup_input"
         android:layout_width="match_parent"

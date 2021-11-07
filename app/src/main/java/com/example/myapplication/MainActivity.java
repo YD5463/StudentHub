@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         Button signup_btn = findViewById(R.id.signup_btn);
         login_btn.setOnClickListener(v -> {
             Log.d(TAG,"on login handler");
-            Intent login_intent = new Intent(getApplicationContext(),Home.class);
+            Intent login_intent = new Intent(getApplicationContext(),Login.class);
             startActivity(login_intent);
         });
         signup_btn.setOnClickListener(v->{

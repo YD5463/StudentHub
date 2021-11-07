@@ -1,27 +1,41 @@
 package com.example.myapplication;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
-import android.util.Log;
+import android.view.View;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mobsandgeeks.saripaar.annotation.Email;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Password;
 
+import java.io.IOException;
+
 
 public class Signup extends FormValidator {
     static private final String TAG = "Signup";
+    public static final int PICK_IMAGE = 1;
+
     private FirebaseAuth mAuth;
+
+    private ImageView profile_image;
 
     @NotEmpty() @Email()
     private EditText email;
@@ -32,21 +46,66 @@ public class Signup extends FormValidator {
 
     private Button signup_button;
 
+    private ActivityResultLauncher<Intent> someActivityResultLauncher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        init();
+        someActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        assert data != null;
+                        Uri imageUri = data.getData();
+                        try {
+                            //TODO: check image size
+//                            InputStream input = this.getContentResolver().openInputStream(uri);
+//                            BitmapFactory.Options options = new BitmapFactory.Options();
+//                            options.inJustDecodeBounds = true;
+//                            BitmapFactory.decodeStream(
+//                                    input,
+//                                    null,
+//                                    options);
+//                            int imageHeight = options.outHeight;
+//                            int imageWidth = options.outWidth;
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        init_variables();
+        init_db();
         signup_button.setOnClickListener(this::onSubmit);
+        profile_image.setOnClickListener(this::onImagePick); //TODO: change default image look
+    }
+    private void onImagePick(View v){
+        //TODO: check if image set
+        final String TYPE = "image/*";
+        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        getIntent.setType(TYPE);
+
+        Intent pickIntent = new Intent(Intent.ACTION_PICK);
+        pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,TYPE);
+
+        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+
+        someActivityResultLauncher.launch(chooserIntent);
+    }
+    private void init_db(){
         mAuth = FirebaseAuth.getInstance();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("UserData");
     }
-    private void init(){
+    private void init_variables(){
         email = findViewById(R.id.email_signup_input);
         password = findViewById(R.id.password_signup_input);
         fullname = findViewById(R.id.fullname_signup_input);
         signup_button = findViewById(R.id.signup_btn);
+        profile_image = findViewById(R.id.profile_image_picker);
     }
 
     @Override
