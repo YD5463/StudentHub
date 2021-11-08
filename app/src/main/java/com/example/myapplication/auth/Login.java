@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.auth;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -8,9 +8,8 @@ import android.widget.EditText;
 
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.example.myapplication.FormValidator;
+import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -19,7 +18,7 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Password;
 
 
-public class Login extends FormValidator{
+public class Login extends FormValidator {
     static private final String TAG = "Login";
     private FirebaseAuth mAuth;
 

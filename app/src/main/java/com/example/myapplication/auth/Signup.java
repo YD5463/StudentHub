@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.auth;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -11,7 +11,6 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.view.View;
 
@@ -19,6 +18,10 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.cloudinary.android.MediaManager;
+import com.example.myapplication.FormValidator;
+import com.example.myapplication.Home;
+import com.example.myapplication.R;
+import com.example.myapplication.database.UserData;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -31,7 +34,6 @@ import java.io.IOException;
 
 public class Signup extends FormValidator {
     static private final String TAG = "Signup";
-    public static final int PICK_IMAGE = 1;
 
     private FirebaseAuth mAuth;
 

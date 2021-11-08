@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.database;
 
 public class UserData {
     public enum Gender{

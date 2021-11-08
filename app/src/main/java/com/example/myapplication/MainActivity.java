@@ -7,12 +7,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 
-import com.cloudinary.android.MediaManager;
+import com.example.myapplication.auth.Login;
+import com.example.myapplication.auth.Signup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     static private final String TAG = "MainActivity";
@@ -21,10 +19,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-//        if(currentUser != null){
-//            Intent goto_home = new Intent(getApplicationContext(),Home.class);
-//            startActivity(goto_home);
-//        }
+        if(currentUser != null){
+            Intent goto_home = new Intent(getApplicationContext(),Home.class);
+            startActivity(goto_home);
+        }
     }
 
     @Override
@@ -36,12 +34,12 @@ public class MainActivity extends AppCompatActivity {
         Button signup_btn = findViewById(R.id.signup_btn);
         login_btn.setOnClickListener(v -> {
             Log.d(TAG,"on login handler");
-            Intent login_intent = new Intent(getApplicationContext(),Login.class);
+            Intent login_intent = new Intent(getApplicationContext(), Login.class);
             startActivity(login_intent);
         });
         signup_btn.setOnClickListener(v->{
             Log.d(TAG,"on signup handler");
-            Intent signup_intent = new Intent(getApplicationContext(),Signup.class);
+            Intent signup_intent = new Intent(getApplicationContext(), Signup.class);
             startActivity(signup_intent);
         });
     }
