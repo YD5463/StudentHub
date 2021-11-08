@@ -11,14 +11,14 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.view.View;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
+import com.cloudinary.android.MediaManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -44,6 +44,7 @@ public class Signup extends FormValidator {
     @NotEmpty()
     private EditText fullname;
 
+    private String image_url;
     private Button signup_button;
 
     private ActivityResultLauncher<Intent> someActivityResultLauncher;
@@ -51,6 +52,7 @@ public class Signup extends FormValidator {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        MediaManager.init(this);
         someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -59,18 +61,9 @@ public class Signup extends FormValidator {
                         assert data != null;
                         Uri imageUri = data.getData();
                         try {
-                            //TODO: check image size
-//                            InputStream input = this.getContentResolver().openInputStream(uri);
-//                            BitmapFactory.Options options = new BitmapFactory.Options();
-//                            options.inJustDecodeBounds = true;
-//                            BitmapFactory.decodeStream(
-//                                    input,
-//                                    null,
-//                                    options);
-//                            int imageHeight = options.outHeight;
-//                            int imageWidth = options.outWidth;
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-
+                            profile_image.setImageBitmap(bitmap);
+                            image_url = MediaManager.get().upload(imageUri).dispatch();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -110,6 +103,7 @@ public class Signup extends FormValidator {
 
     @Override
     public void onValidationSucceeded() {
+        Log.d(TAG,image_url);
         String emailVal = email.getText().toString();
         String passwordVal = password.getText().toString();
         String fullnameVal = fullname.getText().toString();
@@ -122,7 +116,7 @@ public class Signup extends FormValidator {
                 (task -> {
                     mDialog.cancel();
                     if (task.isSuccessful()) {
-                        UserData data = new UserData(fullnameVal, emailVal, genderVal);
+                        UserData data = new UserData(fullnameVal, emailVal, genderVal,image_url);
                         FirebaseDatabase.getInstance().getReference("UserData")
                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(data).
                                 addOnCompleteListener(task1 -> {

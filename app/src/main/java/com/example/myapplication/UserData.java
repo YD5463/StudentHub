@@ -6,13 +6,15 @@ public class UserData {
         FEMALE,
         DECLINE_TO_ANSWER
     }
-    public String fullname,email;
+    public String fullname,email,profile_image_url;
     public Gender gender;
     public UserData(){
     }
-    public UserData(String fullname, String email, Gender gender) {
+
+    public UserData(String fullname, String email, Gender gender,String profile_image_url) {
         this.fullname = fullname;
         this.email = email;
         this.gender = gender;
+        this.profile_image_url = profile_image_url;
     }
 }

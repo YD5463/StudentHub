@@ -11,18 +11,26 @@
     android:paddingLeft="25dp"
     android:paddingRight="25dp"
     >
-
-    <ImageView
-        android:id="@+id/profile_image_picker"
+    <androidx.cardview.widget.CardView
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
+        app:cardCornerRadius="50dp"
+        android:elevation="10dp"
         android:layout_marginBottom="30dp"
-        android:src="@drawable/ic_launcher_foreground"
-        android:contentDescription="@string/profile_image"
-        android:clickable="true"
-        android:focusable="true"
-        />
+        >
+
+        <ImageView
+            android:id="@+id/profile_image_picker"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_launcher_foreground"
+            android:contentDescription="@string/profile_image"
+            android:clickable="true"
+            android:focusable="true"
+            />
+    </androidx.cardview.widget.CardView>
+
 
     <EditText
         android:id="@+id/email_signup_input"
@@ -56,6 +64,19 @@
         android:layout_height="wrap_content"
         android:autofillHints="password"
         android:hint="@string/password"
+        android:inputType="textPassword"
+        android:background="@null"
+        android:textSize="20sp"
+        android:layout_marginBottom="15dp"
+        android:textCursorDrawable="@null"
+        android:padding="10dp"
+        />
+    <EditText
+        android:id="@+id/password_signup_input_again"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="password"
+        android:hint="@string/password_again"
         android:inputType="textPassword"
         android:background="@null"
         android:textSize="20sp"

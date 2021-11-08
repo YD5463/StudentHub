@@ -30,6 +30,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="CLOUDINARY_URL"
+            android:value="cloudinary://583243766695938:F87M-3-MaUONETTiUGChX0vEddA@dxrghsfsy"/>
     </application>
 
 </manifest>

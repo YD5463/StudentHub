@@ -7,8 +7,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 
+import com.cloudinary.android.MediaManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     static private final String TAG = "MainActivity";
@@ -17,10 +21,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            Intent goto_home = new Intent(getApplicationContext(),Home.class);
-            startActivity(goto_home);
-        }
+//        if(currentUser != null){
+//            Intent goto_home = new Intent(getApplicationContext(),Home.class);
+//            startActivity(goto_home);
+//        }
     }
 
     @Override
