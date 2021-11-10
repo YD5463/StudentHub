@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="register_instead" type="id" />
+    <item name="forgot_password" type="id" />
+    <item name="login_btn" type="id" />
+    <item name="password_input" type="id" />
+    <item name="email_input" type="id" />
+
+</resources>
