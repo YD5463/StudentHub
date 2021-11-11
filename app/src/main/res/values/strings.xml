@@ -28,4 +28,7 @@
     <string name="new_post">New Post</string>
     <string name="password_again">Password Again</string>
     <string name="add_post">Add Post</string>
+    <string name="post_name">Name</string>
+    <string name="post_description">Description</string>
+    <string name="post_price">price</string>
 </resources>

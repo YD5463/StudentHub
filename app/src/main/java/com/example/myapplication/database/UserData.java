@@ -8,6 +8,7 @@ public class UserData {
     }
     public String fullname,email,profile_image_url;
     public Gender gender;
+    public boolean isAdmin;
     public UserData(){
     }
 
@@ -16,5 +17,6 @@ public class UserData {
         this.email = email;
         this.gender = gender;
         this.profile_image_url = profile_image_url;
+        this.isAdmin = false;
     }
 }

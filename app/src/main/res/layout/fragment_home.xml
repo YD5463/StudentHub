@@ -24,20 +24,45 @@
 
 
         <EditText
-            android:id="@+id/test"
+            android:id="@+id/post_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints="emailAddress"
-            android:drawableLeft="@drawable/ic_baseline_person_24"
-            android:drawablePadding="5dp"
-            android:hint="@string/fullname"
-            android:inputType="textEmailAddress"
-            android:background="@null"
+            android:hint="@string/post_name"
+            android:inputType="textCapWords"
+            android:background="@drawable/rounded_edittext"
             android:textSize="20sp"
             android:layout_marginBottom="20dp"
             android:textCursorDrawable="@null"
             android:padding="10dp"
             />
+
+
+    <EditText
+        android:id="@+id/post_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/post_description"
+        android:inputType="textMultiLine"
+        android:background="@drawable/rounded_edittext"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"
+        android:textCursorDrawable="@null"
+        android:padding="10dp"
+        />
+
+
+    <EditText
+        android:id="@+id/test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/post_price"
+        android:inputType="number"
+        android:background="@drawable/rounded_edittext"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"
+        android:textCursorDrawable="@null"
+        android:padding="10dp"
+        />
         <Button
             android:id="@+id/add_post_btn"
             android:layout_width="match_parent"
