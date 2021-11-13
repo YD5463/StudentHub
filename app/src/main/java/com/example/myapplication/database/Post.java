@@ -1,14 +1,26 @@
 package com.example.myapplication.database;
 
-public class PostData {
-    private String title, description;
+public class Post {
+    private String title, description, uid;
     private int starCount, price;
 
-    public PostData(String title, String description, int starCount, int price) {
+    public Post() {
+    }
+
+    public Post(String title, String description, int starCount, int price, String uid) {
         this.title = title;
         this.description = description;
         this.starCount = starCount;
         this.price = price;
+        this.uid = uid;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getTitle() {
