@@ -16,12 +16,6 @@
             android:exported="false"
             android:label="@string/title_activity_home" />
         <activity
-            android:name=".auth.Signup"
-            android:exported="false" />
-        <activity
-            android:name=".auth.Login"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
