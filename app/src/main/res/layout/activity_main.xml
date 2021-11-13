@@ -1,65 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rootRL"
+<RelativeLayout
+    android:theme="@style/Theme.AppCompat"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
-    android:orientation="vertical"
-    android:textAlignment="center"
-    android:gravity="center_horizontal"
-    android:padding="20dp"
-    >
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/ic_launcher_foreground"
-        android:contentDescription="@string/app_logo" />
-    <TextView
-        android:layout_height="0dp"
-        android:layout_width="wrap_content"
-        android:textSize="25sp"
-        android:padding="15dp"
-        android:text="@string/sub_title"
-        android:textStyle="bold"
-        android:layout_weight="1"
-        />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="bottom"
-
-        >
-
-    <Button
-        android:id="@+id/login_btn"
-        android:layout_width="match_parent"
-        android:layout_margin="10dp"
-        android:layout_height="wrap_content"
-        android:text="@string/login"
-        android:backgroundTint="@color/primary"
-        android:textColor="@color/white"
-        android:layout_marginBottom="10dp"
-        android:bottomRightRadius="20dp"
-        android:bottomLeftRadius="20dp"
-        android:topLeftRadius="20dp"
-        android:topRightRadius="20dp"
-        />
-        <!--  TODO: extract button to a reusable component  -->
-        <Button
-            android:id="@+id/signup_btn"
-            android:layout_width="match_parent"
-            android:layout_margin="10dp"
-            android:layout_height="wrap_content"
-            android:text="@string/signup"
-            android:backgroundTint="@color/secondary"
-            android:textColor="@color/white"
-            android:layout_marginBottom="10dp"
-            android:bottomRightRadius="20dp"
-            android:bottomLeftRadius="20dp"
-            android:topLeftRadius="20dp"
-            android:topRightRadius="20dp"
-            />
-    </LinearLayout>
-</LinearLayout>
+    tools:context=".MainActivity">
+</RelativeLayout>
