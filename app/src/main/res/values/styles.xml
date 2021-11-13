@@ -1,6 +1,18 @@
 <resources>
 
-    <style name="Widget.Theme.MyApplication.MyView" parent="">
-        <item name="android:background">@color/gray_400</item>
+
+    <!--below is the custom theme which we will be using for our Login Screen-->
+    <!--We are using no action bar theme for our Login screen-->
+    <style name="Theme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--below line is for setting our text color to black-->
+        <item name="android:textColor">@color/black</item>
+        <!--we are setting our primary color to green-->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <!--we are setting our primary color dark to green-->
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!--we are setting our edittext color to black-->
+        <item name="android:editTextColor">@color/black</item>
+        <!--we are setting our window background color to white-->
+        <item name="android:windowBackground">@color/white</item>
     </style>
 </resources>
