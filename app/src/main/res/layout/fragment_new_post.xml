@@ -3,16 +3,86 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.posts.PostsFragment">
+    android:backgroundTint="#CECECE"
+    android:paddingLeft="25dp"
+    android:paddingRight="25dp"
+    tools:context=".ui.posts.PostsFragment"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/text_new_post_title"
+    <ImageView
+        android:id="@+id/profile_image_picker"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:src="@drawable/ic_baseline_image_24"
+        android:contentDescription="@string/profile_image"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginBottom="20dp"
+        />
+
+
+    <EditText
+        android:id="@+id/post_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="This is where the user add a new post"
-        android:textAlignment="center"
-        android:textSize="20sp" />
+        android:layout_height="wrap_content"
+        android:hint="@string/post_name"
+        android:inputType="textCapWords"
+        android:background="@drawable/rounded_edittext"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"
+        android:textCursorDrawable="@null"
+        android:padding="10dp"
+        />
+
+
+    <EditText
+        android:id="@+id/post_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/post_description"
+        android:inputType="textMultiLine"
+        android:background="@drawable/rounded_edittext"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"
+        android:textCursorDrawable="@null"
+        android:padding="10dp"
+        />
+
+
+    <EditText
+        android:id="@+id/post_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/post_price"
+        android:inputType="number"
+        android:background="@drawable/rounded_edittext"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"
+        android:textCursorDrawable="@null"
+        android:padding="10dp"
+        />
+    <Button
+        android:id="@+id/add_post_btn"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+        android:text="@string/add_post"
+        android:backgroundTint="@color/primary"
+        android:textColor="@color/white"
+        android:layout_marginBottom="10dp"
+        android:bottomRightRadius="60dp"
+        android:bottomLeftRadius="60dp"
+        android:topLeftRadius="60dp"
+        android:topRightRadius="60dp"
+        />
+    <!--    <com.example.myapplication.ProfileImage-->
+    <!--        style="@style/Widget.Theme.MyApplication.MyView"-->
+    <!--        android:layout_width="300dp"-->
+    <!--        android:layout_height="300dp"-->
+    <!--        android:paddingLeft="20dp"-->
+    <!--        android:paddingBottom="40dp"-->
+    <!--        app:exampleDimension="24sp"-->
+    <!--        app:exampleString="Hello, ProfileImage"-->
+    <!--        app:exampleDrawable="@android:drawable/ic_menu_add" />-->
+
 </LinearLayout>

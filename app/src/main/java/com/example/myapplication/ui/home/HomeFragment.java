@@ -32,30 +32,11 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private FirebaseAuth mAuth;
 
-    private List<ImageView> images;
-
-    @NotEmpty()
-    private EditText title;
-    @Optional()
-    private EditText description;
-    @NotEmpty()@Min(0) @Max(50000)
-    private EditText price;
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        Button btn = root.findViewById(R.id.add_post_btn);
-        btn.setOnClickListener(this::onSubmit);
         return root;
-    }
-    void onSubmit(View v){
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        String key = mDatabase.child("products").push().getKey();
-        Product post = new Product(title.getText().toString(),description.getText().toString(),
-                Integer.parseInt(price.getText().toString()),key);
-        Map<String, Object> postValues = post.toMap();
-        mDatabase.child("/posts/" + key).updateChildren(postValues);
     }
     @Override
     public void onDestroyView() {
