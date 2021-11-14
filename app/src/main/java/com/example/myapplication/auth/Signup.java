@@ -17,10 +17,13 @@ import android.view.View;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
+import com.example.myapplication.FirebaseUtils;
 import com.example.myapplication.FormValidator;
 import com.example.myapplication.Home;
 import com.example.myapplication.R;
 import com.example.myapplication.database.UserData;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -29,6 +32,8 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Password;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.UUID;
 
 
 public class Signup extends FormValidator {
@@ -64,7 +69,6 @@ public class Signup extends FormValidator {
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
                             profile_image.setImageBitmap(bitmap);
-
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -101,38 +105,38 @@ public class Signup extends FormValidator {
         signup_button = findViewById(R.id.signup_btn);
         profile_image = findViewById(R.id.profile_image_picker);
     }
+    private ProgressDialog createProgressDialog(){
+        ProgressDialog mDialog = new ProgressDialog(getApplicationContext());
+        mDialog.setMessage("Please wait...");
+        mDialog.setCancelable(true);
+        mDialog.show();
+        return mDialog;
+    }
 
     @Override
     public void onValidationSucceeded() {
         Log.d(TAG,image_url);
+        Task<?> uploadImageTask = FirebaseUtils.uploadImage(profile_image,UUID.randomUUID().toString());
         String emailVal = email.getText().toString();
         String passwordVal = password.getText().toString();
         String fullnameVal = fullname.getText().toString();
-        UserData.Gender genderVal = UserData.Gender.MALE;
-        ProgressDialog mDialog = new ProgressDialog(Signup.this);
-        mDialog.setMessage("Please wait...");
-        mDialog.setCancelable(true);
-        mDialog.show();
-        mAuth.createUserWithEmailAndPassword(emailVal, passwordVal).addOnCompleteListener
-                (task -> {
+        UserData.Gender genderVal = UserData.Gender.MALE; //TODO: input this as well
+        ProgressDialog mDialog = createProgressDialog();
+        Task<?> createUserTask = mAuth.createUserWithEmailAndPassword(emailVal, passwordVal);
+        Tasks.whenAllComplete(Arrays.asList(uploadImageTask,createUserTask))
+                .addOnCompleteListener(task -> {
                     mDialog.cancel();
                     if (task.isSuccessful()) {
                         UserData data = new UserData(fullnameVal, emailVal, genderVal,image_url);
                         FirebaseDatabase.getInstance().getReference("UserData")
                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(data).
                                 addOnCompleteListener(task1 -> {
-//                                  signUp_progress.setVisibility(View.GONE);
                                     Toast.makeText(Signup.this, "Successful Registered", Toast.LENGTH_SHORT).show();
-//                                    SharedPreferences sharedPref = Signup.this.getPreferences(Context.MODE_PRIVATE);
-//                                    SharedPreferences.Editor editor = sharedPref.edit();
-//                                    editor.putString(getString(R.string.user), newHighScore);
-//                                    editor.apply();
                                     Intent intent = new Intent(Signup.this, Home.class);
                                     startActivity(intent);
 
                                 });
                     } else {
-//                      signUp_progress.setVisibility(View.GONE);
                         Toast.makeText(Signup.this, "Check Email id or Password", Toast.LENGTH_SHORT).show();
                     }
                 });

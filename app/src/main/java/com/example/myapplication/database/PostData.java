@@ -1,7 +1,5 @@
 package com.example.myapplication.database;
 
-import android.net.Uri;
-
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 

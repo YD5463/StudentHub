@@ -34,14 +34,17 @@ public class FirebaseUtils {
             String uid = user.getUid();
         }
     }
-    public static Task<Uri> uploadImage(ImageView image,String imageUniqueName){
-        Bitmap bitmap;
+    public static Bitmap imageViewToBitmap(ImageView image){
         Drawable drawable = image.getDrawable();
-        bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
+        return bitmap;
+    }
+    public static Task<Uri> uploadImage(ImageView image,String imageUniqueName){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Bitmap bitmap = imageViewToBitmap(image);
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
         UploadTask uploadTask = storageRef.child(imageUniqueName).putBytes(data);
