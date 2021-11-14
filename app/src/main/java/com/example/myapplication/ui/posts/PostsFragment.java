@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -25,10 +27,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.myapplication.FirebaseUtils;
 import com.example.myapplication.R;
 import com.example.myapplication.Utils;
 import com.example.myapplication.database.PostData;
 import com.example.myapplication.databinding.FragmentNewPostBinding;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,26 +45,31 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class PostsFragment extends Fragment {
     static final private int MAX_IMAGES = 3;
 
     private PostsViewModel postsViewModel;
     private FragmentNewPostBinding binding;
-    private StorageReference storageRef;
 
     private List<ImageView> images;
-
+    private List<String> imagesUris;
     private EditText title;
     private EditText description;
     private EditText price;
     private LinearLayout linearLayout;
+    private Button addPostBtn;
     private ActivityResultLauncher<Intent> someActivityResultLauncher;
 
-
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private Drawable getDefaultImage(){
+        Context context = getContext();
+        return context!=null ? context.getDrawable(R.drawable.ic_baseline_image_24) : null;
+    }
     private ImageView createDefaultImage(){
         ImageView imageView = new ImageView(getContext());
-        imageView.setImageDrawable(getContext().getDrawable(R.drawable.ic_baseline_image_24));
+        imageView.setImageDrawable(getDefaultImage());
         imageView.setOnClickListener(this::onImagePick);
         int width = (int)getResources().getDimension(R.dimen.add_post_image_width);
         int height = (int)getResources().getDimension(R.dimen.add_post_image_height);
@@ -71,17 +81,19 @@ public class PostsFragment extends Fragment {
         return imageView;
     }
 
-
-    private List<String> upload(){
-        List<String> urls = new ArrayList<>(images.size());
+    private ProgressDialog createProgressDialog(){
+        ProgressDialog mDialog = new ProgressDialog(getContext());
+        mDialog.setMessage("Please wait...");
+        mDialog.setCancelable(true);
+        mDialog.show();
+        return mDialog;
+    }
+    private List<Task<?>> upload(){
+        List<Task<?>> tasks = new ArrayList<>(images.size());
         for(ImageView image : images){
-            Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] data = baos.toByteArray();
-            UploadTask uploadTask = storageRef.putBytes(data);
+            tasks.add(FirebaseUtils.uploadImage(image, UUID.randomUUID().toString()));
         }
-        return urls;
+        return tasks;
     }
     private void onImagePick(View v){
         //TODO: check if image set
@@ -95,6 +107,35 @@ public class PostsFragment extends Fragment {
         someActivityResultLauncher.launch(chooserIntent);
     }
 
+    private int getPrice(){
+        String priceStr = price.getText().toString();
+        return !priceStr.isEmpty() ? Integer.parseInt(price.getText().toString()) : 0;
+    }
+    private void onSubmit(View v){
+        List<Task<?>> db_tasks = upload();
+        Context context = getContext();
+        ProgressDialog mDialog = createProgressDialog();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        String key = mDatabase.child("products").push().getKey();
+        PostData post = new PostData(title.getText().toString(),description.getText().toString(), getPrice(),key,imagesUris);
+        Map<String, Object> postValues = post.toMap();
+        Task<?> addToDBTask = mDatabase.child("/posts/" + key).updateChildren(postValues);
+        db_tasks.add(addToDBTask);
+        Tasks.whenAllComplete(db_tasks).addOnCompleteListener(t->{
+            addToDBTask.addOnCompleteListener(task->{
+                mDialog.cancel();
+                if(task.isSuccessful()){
+                    cleanForm();
+                    Utils.hideKeyboardFrom(context,v);
+                    Toast.makeText(context, "Post Added Successfully.",
+                            Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(context, "Add Post Failed.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+    }
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         postsViewModel = new ViewModelProvider(this).get(PostsViewModel.class);
 
@@ -108,13 +149,11 @@ public class PostsFragment extends Fragment {
         description = root.findViewById(R.id.post_description);
         price = root.findViewById(R.id.post_price);
         linearLayout = root.findViewById(R.id.new_post_images);
+        addPostBtn = root.findViewById(R.id.add_post_btn);
 
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        storageRef = storage.getReference();
         images = new ArrayList<>(MAX_IMAGES);
         images.add(createDefaultImage());
-        Button btn = root.findViewById(R.id.add_post_btn);
-        btn.setOnClickListener(this::onSubmit);
+        addPostBtn.setOnClickListener(this::onSubmit);
         someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -134,38 +173,15 @@ public class PostsFragment extends Fragment {
                     }
                 });
     }
-    private int getPrice(){
-        String priceStr = price.getText().toString();
-        return !priceStr.isEmpty() ? Integer.parseInt(price.getText().toString()) : 0;
-    }
-    private void onSubmit(View v){
-        Context context = getContext();
-        ProgressDialog mDialog = new ProgressDialog(context);
-        mDialog.setMessage("Please wait...");
-        mDialog.setCancelable(true);
-        mDialog.show();
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        String key = mDatabase.child("products").push().getKey();
-        PostData post = new PostData(title.getText().toString(),description.getText().toString(), getPrice(),key);
-        Map<String, Object> postValues = post.toMap();
-        mDatabase.child("/posts/" + key).updateChildren(postValues).
-                addOnCompleteListener(task->{
-                    mDialog.cancel();
-                    if(task.isSuccessful()){
-                        cleanForm();
-                        Utils.hideKeyboardFrom(context,v);
-                        Toast.makeText(context, "Post Added Successfully.",
-                                Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(context, "Add Post Failed.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
     void cleanForm(){
         title.setText("");
         description.setText("");
         price.setText("");
+        for(ImageView imageView : images){
+            imageView.setImageResource(0);
+        }
+        images.get(0).setImageDrawable(getDefaultImage());
+
     }
 
     @Override

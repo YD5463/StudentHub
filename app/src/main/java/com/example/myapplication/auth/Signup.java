@@ -17,7 +17,6 @@ import android.view.View;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
-import com.cloudinary.android.MediaManager;
 import com.example.myapplication.FormValidator;
 import com.example.myapplication.Home;
 import com.example.myapplication.R;
@@ -54,7 +53,7 @@ public class Signup extends FormValidator {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        MediaManager.init(this);
+
         someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -65,7 +64,7 @@ public class Signup extends FormValidator {
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
                             profile_image.setImageBitmap(bitmap);
-                            image_url = MediaManager.get().upload(imageUri).dispatch();
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
