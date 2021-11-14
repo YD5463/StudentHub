@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <import type="android.text.InputType"/>
     </data>
     <LinearLayout
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+        android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".auth.Login"
     android:orientation="vertical"
@@ -56,35 +56,47 @@
             android:padding="10dp"
             />
 
-    <include layout="@layout/button"
-        app:title="@{@string/login}"
-        app:color="@{@color/primary}"
-        android:id="@id/login_btn"/>
-    <TextView
-        android:id="@id/forgot_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textSize="20sp"
-        android:text="@string/forgot_password"
-        android:clickable="true"
-        android:focusable="true"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:layout_marginBottom="20dp"
-        />
-    <TextView
-        android:id="@id/register_instead"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textSize="20sp"
-        android:text="@string/register"
-        android:clickable="true"
-        android:focusable="true"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        />
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="match_parent"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/white"
+            android:layout_marginBottom="10dp"
+            android:bottomRightRadius="60dp"
+            android:bottomLeftRadius="60dp"
+            android:topLeftRadius="60dp"
+            android:topRightRadius="60dp"
+            />
+
+        <Button
+            android:id="@+id/forgot_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            style="?android:attr/borderlessButtonStyle"
+            android:textSize="20sp"
+            android:text="Forgot password"
+            android:textAllCaps="false"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:layout_marginBottom="20dp"
+            />
+
+        <Button
+            android:id="@+id/register_instead"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:text="Register"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
 
 
     </LinearLayout>
