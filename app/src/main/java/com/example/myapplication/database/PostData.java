@@ -9,12 +9,61 @@ import java.util.Map;
 
 @IgnoreExtraProperties
 public class PostData {
-    public String title;
-    public String description;
-    public int price;
-    public String userId;
-    public int starCount = 0;
-    public List<String> images;
+    private String title;
+    private String description;
+    private String userId;
+    private int price;
+    private int starCount = 0;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public int getStarCount() {
+        return starCount;
+    }
+
+    public void setStarCount(int starCount) {
+        this.starCount = starCount;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+
+    private List<String> images;
     public PostData(){
 
     }
@@ -35,4 +84,5 @@ public class PostData {
         result.put("images",images);
         return result;
     }
+
 }

@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.database.Post;
 import com.example.myapplication.database.PostAdapter;
+import com.example.myapplication.database.PostData;
 import com.example.myapplication.databinding.FragmentHomeBinding;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
@@ -46,8 +46,8 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // It is a class provide by the FirebaseUI to make a query in the database to fetch appropriate data
-        FirebaseRecyclerOptions<Post> options = new FirebaseRecyclerOptions.Builder<Post>()
-                .setQuery(db, Post.class)
+        FirebaseRecyclerOptions<PostData> options = new FirebaseRecyclerOptions.Builder<PostData>()
+                .setQuery(db, PostData.class)
                 .build();
         // Connecting object of required Adapter class to the Adapter class itself
         adapter = new PostAdapter(options);
@@ -108,9 +108,9 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
 
     /* Fetch filtered posts from firebase */
     private void processSearch(String s) {
-        FirebaseRecyclerOptions<Post> options =
-                new FirebaseRecyclerOptions.Builder<Post>()
-                        .setQuery(db.orderByChild("title").startAt(s).endAt(s+"\uf8ff"), Post.class)
+        FirebaseRecyclerOptions<PostData> options =
+                new FirebaseRecyclerOptions.Builder<PostData>()
+                        .setQuery(db.orderByChild("title").startAt(s).endAt(s+"\uf8ff"), PostData.class)
                         .build();
 
         adapter = new PostAdapter(options);

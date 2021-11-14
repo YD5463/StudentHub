@@ -1,7 +1,11 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
+
+import com.example.myapplication.auth.Login;
+import com.example.myapplication.navigation.posts.PostsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,7 +36,8 @@ public class Home extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         binding.fab.setOnClickListener(v -> {
-            Toast.makeText(this, "new Post clicked", Toast.LENGTH_SHORT).show();
+            Intent add_post_intent = new Intent(getApplicationContext(), PostsFragment.class);
+            startActivity(add_post_intent);
         });
     }
 

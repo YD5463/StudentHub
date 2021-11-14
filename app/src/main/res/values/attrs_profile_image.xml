@@ -1,5 +1,0 @@
-<resources>
-    <declare-styleable name="ProfileImage">
-        <attr name="maxImages" format="integer" />
-    </declare-styleable>
-</resources>

@@ -9,7 +9,11 @@
     android:paddingTop="50dp"
     android:paddingLeft="25dp"
     android:paddingRight="25dp"
-    tools:context=".ui.home.HomeFragment">
+    tools:context=".navigation.home.HomeFragment">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/posts"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

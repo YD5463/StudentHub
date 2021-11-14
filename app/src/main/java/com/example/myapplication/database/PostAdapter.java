@@ -14,9 +14,9 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 // FirebaseRecyclerAdapter is a class provided by FirebaseUI.
 // It provides functions to bind, adapt and show database contents in a Recycler View
-public class PostAdapter extends FirebaseRecyclerAdapter<Post, PostAdapter.PostViewHolder> {
+public class PostAdapter extends FirebaseRecyclerAdapter<PostData, PostAdapter.PostViewHolder> {
 
-    public PostAdapter(@NonNull FirebaseRecyclerOptions<Post> options) {
+    public PostAdapter(@NonNull FirebaseRecyclerOptions<PostData> options) {
         super(options);
     }
 
@@ -24,7 +24,7 @@ public class PostAdapter extends FirebaseRecyclerAdapter<Post, PostAdapter.PostV
     @SuppressLint("SetTextI18n")
     @Override
     protected void
-    onBindViewHolder(@NonNull PostViewHolder holder, int position, @NonNull Post model) {
+    onBindViewHolder(@NonNull PostViewHolder holder, int position, @NonNull PostData model) {
 
         // Add Post's fields from model class to appropriate view in Card view
         holder.title.setText(model.getTitle());

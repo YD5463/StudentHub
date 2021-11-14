@@ -5,18 +5,19 @@
         android:title="@string/title_home"
         android:icon="@drawable/ic_home_black_24dp"/>
 
-    <item android:id="@+id/navigation_newPost"
-        android:title="Chats"
+    <item android:id="@+id/navigation_Chats"
+        android:title="@string/chats"
         android:icon="@drawable/ic_baseline_chat_24"/>
 
-    <item android:id="@+id/mplaceholder"
-        android:title="" />
+    <item android:id="@+id/navigation_newPost"
+        android:title="@string/new_post"
+        />
 
     <item android:id="@+id/navigation_myAccount"
-        android:title="Profile"
+        android:title="@string/profile"
         android:icon="@drawable/ic_baseline_person_24"/>
 
     <item android:id="@+id/mSetting"
-        android:title="Setting"
+        android:title="@string/setting"
         android:icon="@drawable/ic_baseline_settings_24"/>
 </menu>
