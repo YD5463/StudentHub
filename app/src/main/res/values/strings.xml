@@ -27,4 +27,6 @@
     <string name="phone_number">Phone Number</string>
     <string name="new_post">New Post</string>
     <string name="password_again">Password Again</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="submit">Submit</string>
 </resources>
