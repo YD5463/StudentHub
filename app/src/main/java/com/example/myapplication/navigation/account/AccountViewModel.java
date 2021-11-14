@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.account;
+package com.example.myapplication.navigation.account;
 
 import android.widget.ImageView;
 

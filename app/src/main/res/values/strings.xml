@@ -31,4 +31,6 @@
     <string name="post_name">Name</string>
     <string name="post_description">Description</string>
     <string name="post_price">price</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="submit">Submit</string>
 </resources>

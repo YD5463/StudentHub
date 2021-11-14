@@ -1,7 +1,7 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
-
+import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,11 +25,15 @@ public class Home extends AppCompatActivity {
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_newPost, R.id.navigation_myAccount)
+                R.id.navigation_home, R.id.navigation_newPost, R.id.navigation_myAccount , R.id.navigation_newPost, R.id.navigation_myAccount)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_home);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        binding.fab.setOnClickListener(v -> {
+            Toast.makeText(this, "new Post clicked", Toast.LENGTH_SHORT).show();
+        });
     }
 
 }
