@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,11 +44,13 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PostsFragment extends Fragment {
+    static final private String TAG = "PostsFragment";
     static final private int MAX_IMAGES = 3;
 
     private PostsViewModel postsViewModel;
     private FragmentNewPostBinding binding;
 
+    private int imagesCount = 0;
     private List<ImageView> images;
     private List<String> imagesUris;
     private EditText title;
@@ -82,10 +86,10 @@ public class PostsFragment extends Fragment {
         mDialog.show();
         return mDialog;
     }
-    private List<Task<?>> upload(){
-        List<Task<?>> tasks = new ArrayList<>(images.size());
-        for(ImageView image : images){
-            tasks.add(FirebaseUtils.uploadImage(image, UUID.randomUUID().toString()));
+    private List<Task<UploadTask.TaskSnapshot>> upload(){
+        List<Task<UploadTask.TaskSnapshot>> tasks = new ArrayList<>(imagesCount);
+        for(int i=0;i<imagesCount;i++){
+            tasks.add(FirebaseUtils.uploadImage(images.get(i), UUID.randomUUID().toString()));
         }
         return tasks;
     }
@@ -106,16 +110,25 @@ public class PostsFragment extends Fragment {
         return !priceStr.isEmpty() ? Integer.parseInt(price.getText().toString()) : 0;
     }
     private void onSubmit(View v){
-        List<Task<?>> db_tasks = upload();
+        List<Task<UploadTask.TaskSnapshot>> db_tasks = upload();
         Context context = getContext();
         ProgressDialog mDialog = createProgressDialog();
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         String key = mDatabase.child("products").push().getKey();
-        PostData post = new PostData(title.getText().toString(),description.getText().toString(), getPrice(),key,imagesUris);
-        Map<String, Object> postValues = post.toMap();
-        Task<?> addToDBTask = mDatabase.child("/posts/" + key).updateChildren(postValues);
-        db_tasks.add(addToDBTask);
-        Tasks.whenAllComplete(db_tasks).addOnCompleteListener(t->{
+        Tasks.whenAllComplete(db_tasks).addOnCompleteListener(t-> {
+            for (Task<UploadTask.TaskSnapshot> db_task : db_tasks) {
+                if(db_task.isSuccessful()){
+                    String path = db_task.getResult().getUploadSessionUri().getPath();
+                    Log.e(TAG,path);
+                    imagesUris.add(path);
+                }else{
+                    Log.e(TAG,db_task.getException().getMessage());
+                }
+            }
+            PostData post = new PostData(title.getText().toString(),description.getText().toString(), getPrice(),key,imagesUris);
+            Map<String, Object> postValues = post.toMap();
+            Task<?> addToDBTask = mDatabase.child("/posts/" + key).updateChildren(postValues);
+
             addToDBTask.addOnCompleteListener(task->{
                 mDialog.cancel();
                 if(task.isSuccessful()){
@@ -127,9 +140,10 @@ public class PostsFragment extends Fragment {
                     Toast.makeText(context, "Add Post Failed.",
                             Toast.LENGTH_SHORT).show();
                 }
+                });
             });
-        });
     }
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         postsViewModel = new ViewModelProvider(this).get(PostsViewModel.class);
 
@@ -146,6 +160,7 @@ public class PostsFragment extends Fragment {
         addPostBtn = root.findViewById(R.id.add_post_btn);
 
         images = new ArrayList<>(MAX_IMAGES);
+        imagesUris = new ArrayList<>(MAX_IMAGES);
         images.add(createDefaultImage());
         addPostBtn.setOnClickListener(this::onSubmit);
         someActivityResultLauncher = registerForActivityResult(
@@ -158,6 +173,7 @@ public class PostsFragment extends Fragment {
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
                             images.get(images.size()-1).setImageBitmap(bitmap);
+                            imagesCount++;
                             if(images.size()<MAX_IMAGES){
                                 images.add(createDefaultImage());
                             }
@@ -171,6 +187,7 @@ public class PostsFragment extends Fragment {
         title.setText("");
         description.setText("");
         price.setText("");
+        imagesCount = 0;
         for(ImageView imageView : images){
             imageView.setImageResource(0);
         }

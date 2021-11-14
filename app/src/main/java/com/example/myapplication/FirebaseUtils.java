@@ -2,15 +2,10 @@ package com.example.myapplication;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,18 +37,17 @@ public class FirebaseUtils {
         drawable.draw(canvas);
         return bitmap;
     }
-    public static Task<Uri> uploadImage(ImageView image,String imageUniqueName){
+    public static Task<UploadTask.TaskSnapshot> uploadImage(ImageView image, String imageUniqueName){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Bitmap bitmap = imageViewToBitmap(image);
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
         UploadTask uploadTask = storageRef.child(imageUniqueName).putBytes(data);
-        Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
+        return uploadTask.continueWithTask(task -> {
             if (!task.isSuccessful()) {
                 throw task.getException();
             }
-            return storageRef.getDownloadUrl();
+            return task;
         });
-        return urlTask;
     }
 }
