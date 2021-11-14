@@ -8,26 +8,20 @@
     android:paddingRight="25dp"
     tools:context=".ui.posts.PostsFragment"
     android:orientation="vertical">
-
-    <ImageView
-        android:id="@+id/profile_image_picker"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:src="@drawable/ic_baseline_image_24"
-        android:contentDescription="@string/profile_image"
-        android:clickable="true"
-        android:focusable="true"
-        android:layout_marginBottom="20dp"
-        />
-
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/new_post_images"
+        >
+    </LinearLayout>
     <EditText
         android:id="@+id/post_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:autofillHints="password"
         android:hint="@string/post_name"
         android:inputType="textCapWords"
-        android:background="@drawable/rounded_edittext"
         android:textSize="20sp"
         android:layout_marginBottom="20dp"
         android:textCursorDrawable="@null"
@@ -41,7 +35,6 @@
         android:layout_height="wrap_content"
         android:hint="@string/post_description"
         android:inputType="textMultiLine"
-        android:background="@drawable/rounded_edittext"
         android:textSize="20sp"
         android:layout_marginBottom="20dp"
         android:textCursorDrawable="@null"
@@ -55,7 +48,6 @@
         android:layout_height="wrap_content"
         android:hint="@string/post_price"
         android:inputType="number"
-        android:background="@drawable/rounded_edittext"
         android:textSize="20sp"
         android:layout_marginBottom="20dp"
         android:textCursorDrawable="@null"
@@ -75,7 +67,7 @@
         android:topLeftRadius="60dp"
         android:topRightRadius="60dp"
         />
-    <!--    <com.example.myapplication.ProfileImage-->
+    <!--    <com.example.myapplication.ImagePicker-->
     <!--        style="@style/Widget.Theme.MyApplication.MyView"-->
     <!--        android:layout_width="300dp"-->
     <!--        android:layout_height="300dp"-->

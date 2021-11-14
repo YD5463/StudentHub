@@ -3,4 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="add_post_image_width">75dp</dimen>
+    <dimen name="add_post_image_height">75dp</dimen>
+    <dimen name="add_post_image_padding">5dp</dimen>
 </resources>

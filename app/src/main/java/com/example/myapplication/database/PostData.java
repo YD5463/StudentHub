@@ -7,16 +7,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 @IgnoreExtraProperties
-public class Product {
+public class PostData {
     public String title;
     public String description;
     public int price;
     public String userId;
     public int starCount = 0;
-    public Product(){
+    public PostData(){
 
     }
-    public Product(String title,String description,int price,String userId){
+    public PostData(String title, String description, int price, String userId){
         this.title = title;
         this.description = description;
         this.price = price;
