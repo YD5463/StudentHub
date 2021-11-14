@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/title_home" />
+    <item android:id="@+id/navigation_home"
+        android:title="@string/title_home"
+        android:icon="@drawable/ic_home_black_24dp"/>
 
-    <item
-        android:id="@+id/navigation_newPost"
-        android:icon="@drawable/ic_baseline_add_circle_24"
-        android:title="@string/new_post" />
+    <item android:id="@+id/navigation_newPost"
+        android:title="Chats"
+        android:icon="@drawable/ic_baseline_chat_24"/>
 
-    <item
-        android:id="@+id/navigation_myAccount"
-        android:icon="@drawable/ic_baseline_account_circle_24"
-        android:title="@string/title_account" />
+    <item android:id="@+id/mplaceholder"
+        android:title="" />
 
+    <item android:id="@+id/navigation_myAccount"
+        android:title="Profile"
+        android:icon="@drawable/ic_baseline_person_24"/>
+
+    <item android:id="@+id/mSetting"
+        android:title="Setting"
+        android:icon="@drawable/ic_baseline_settings_24"/>
 </menu>
