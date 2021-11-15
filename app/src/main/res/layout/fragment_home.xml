@@ -6,9 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:backgroundTint="#CECECE"
-    android:paddingTop="50dp"
-    android:paddingLeft="25dp"
-    android:paddingRight="25dp"
     tools:context=".navigation.home.HomeFragment">
 
     <androidx.recyclerview.widget.RecyclerView
