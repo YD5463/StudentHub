@@ -9,6 +9,8 @@ import com.example.myapplication.navigation.posts.PostsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -36,8 +38,9 @@ public class Home extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         binding.fab.setOnClickListener(v -> {
-            Intent add_post_intent = new Intent(getApplicationContext(), PostsFragment.class);
-            startActivity(add_post_intent);
+            Fragment fragment = new PostsFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
         });
     }
 
