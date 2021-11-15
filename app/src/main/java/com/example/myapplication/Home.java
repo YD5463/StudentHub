@@ -36,8 +36,8 @@ public class Home extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         binding.fab.setOnClickListener(v -> {
-            Intent add_post_intent = new Intent(getApplicationContext(), PostsFragment.class);
-            startActivity(add_post_intent);
+//            Intent add_post_intent = new Intent(getApplicationContext(), PostsFragment.class);
+//            startActivity(add_post_intent);
         });
     }
 
