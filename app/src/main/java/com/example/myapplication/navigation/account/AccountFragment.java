@@ -1,5 +1,7 @@
 package com.example.myapplication.navigation.account;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +11,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentAccountBinding;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class AccountFragment extends Fragment implements View.OnClickListener {
 
@@ -29,6 +34,14 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         btnMyPosts = binding.btnMyPosts;
         btnMyPosts.setOnClickListener(this);
         accountViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        Button logout = root.findViewById(R.id.logout);
+        logout.setOnClickListener(l->{
+            Intent i = new Intent(getActivity(), MainActivity.class);
+            startActivity(i);
+            ((Activity) getActivity()).overridePendingTransition(0, 0);
+            FirebaseAuth.getInstance().signOut();
+
+        });
         return root;
     }
 

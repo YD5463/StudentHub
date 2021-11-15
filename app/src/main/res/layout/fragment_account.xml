@@ -87,4 +87,11 @@
             android:inputType="phone" />
 
     </LinearLayout>
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="50dp"
+        android:text="@string/logout"
+        android:textColor="#3E2723" />
 </LinearLayout>

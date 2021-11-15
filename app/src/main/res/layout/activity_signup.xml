@@ -63,6 +63,21 @@
         android:padding="10dp"
         />
     <EditText
+        android:id="@+id/phone_number_signup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="phone"
+        android:drawableLeft="@drawable/ic_baseline_phone_24"
+        android:drawablePadding="5dp"
+        android:hint="@string/phone_number"
+        android:inputType="phone"
+        android:background="@null"
+        android:textSize="20sp"
+        android:layout_marginBottom="15dp"
+        android:textCursorDrawable="@null"
+        android:padding="10dp"
+        />
+    <EditText
         android:id="@+id/password_signup_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
