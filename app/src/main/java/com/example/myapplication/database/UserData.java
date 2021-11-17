@@ -1,5 +1,10 @@
 package com.example.myapplication.database;
 
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class UserData {
     public enum Gender{
         MALE,
@@ -20,5 +25,11 @@ public class UserData {
         this.profile_image_url = profile_image_url;
         this.isAdmin = false;
         this.phone_number = phone_number;
+    }
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+
+        return result;
     }
 }

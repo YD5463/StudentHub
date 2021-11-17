@@ -43,7 +43,7 @@ public class Signup extends FormValidator {
     private FirebaseAuth mAuth;
 
     private ImageView profile_image;
-
+    private boolean is_profile_image_default = true;
     @NotEmpty() @Email()
     private EditText email;
     @Password(min=6)
@@ -72,6 +72,7 @@ public class Signup extends FormValidator {
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
                             profile_image.setImageBitmap(bitmap);
+                            is_profile_image_default = false;
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -121,30 +122,38 @@ public class Signup extends FormValidator {
         UserData.Gender genderVal = UserData.Gender.MALE; //TODO: input this as well
         return new UserData(fullname.getText().toString(), email.getText().toString(),genderVal,image_url,phone_number.getText().toString());
     }
+
+    private void edit_user(String image_url,ProgressDialog mDialog){
+        UserData data = create_user(image_url);
+        Task<?> updateUserTask = FirebaseDatabase.getInstance().getReference("UserData")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(data);
+        updateUserTask.addOnCompleteListener(subtask -> {
+            mDialog.cancel();
+            if (subtask.isSuccessful()) {
+                Toast.makeText(Signup.this, "Successful Registered", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Signup.this, Home.class);
+                startActivity(intent);
+            } else {
+                Log.e(TAG, "Error with userUpdate or profileImage upload");
+            }
+        });
+    }
     @Override
     public void onValidationSucceeded() {
         ProgressDialog mDialog = createProgressDialog();
         Task<?> createUserTask = mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString());
         createUserTask.addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Task<UploadTask.TaskSnapshot> uploadImageTask = FirebaseUtils.uploadImage(profile_image,UUID.randomUUID().toString());
-                        uploadImageTask.addOnCompleteListener(t2->{
-                            if(t2.isSuccessful()) {
-                                UserData data = create_user(t2.getResult().getUploadSessionUri().toString());
-                                Task<?> updateUserTask = FirebaseDatabase.getInstance().getReference("UserData")
-                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(data);
-                                updateUserTask.addOnCompleteListener(subtask -> {
-                                    mDialog.cancel();
-                                    if (subtask.isSuccessful()) {
-                                        Toast.makeText(Signup.this, "Successful Registered", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(Signup.this, Home.class);
-                                        startActivity(intent);
-                                    } else {
-                                        Log.e(TAG, "Error with userUpdate or profileImage upload");
-                                    }
-                                });
-                            }
-                        });
+                        if(!is_profile_image_default){
+                            Task<UploadTask.TaskSnapshot> uploadImageTask = FirebaseUtils.uploadImage(profile_image,UUID.randomUUID().toString());
+                            uploadImageTask.addOnCompleteListener(t2->{
+                                if(t2.isSuccessful()) {
+                                    edit_user(t2.getResult().getUploadSessionUri().toString(),mDialog);
+                                }//TODO: handle failed to upload
+                            });
+                        }else{
+                            edit_user("",mDialog);
+                        }
                     } else {
                         Toast.makeText(Signup.this, "Check Email id or Password", Toast.LENGTH_SHORT).show();
                         mDialog.cancel();

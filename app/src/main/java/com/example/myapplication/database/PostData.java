@@ -79,6 +79,7 @@ public class PostData {
         HashMap<String, Object> result = new HashMap<>();
         result.put("uid", userId);
         result.put("title", title);
+        result.put("price",price);
         result.put("description", description);
         result.put("starCount",starCount);
         result.put("images",images);
