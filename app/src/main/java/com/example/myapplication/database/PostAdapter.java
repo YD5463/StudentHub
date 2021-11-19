@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,7 +30,7 @@ public class PostAdapter extends FirebaseRecyclerAdapter<PostData, PostAdapter.P
         // Add Post's fields from model class to appropriate view in Card view
         holder.title.setText(model.getTitle());
         holder.description.setText(model.getDescription());
-        holder.starCount.setText(model.getStarCount()+" ⭐");
+        holder.starCount.setRating(model.getStarCount());
         int price = model.getPrice();
         holder.price.setText(price==0? "למסירה" : price+"₪");
     }
@@ -44,8 +45,8 @@ public class PostAdapter extends FirebaseRecyclerAdapter<PostData, PostAdapter.P
 
     // Sub Class to create references of the views in Card view
     class PostViewHolder extends RecyclerView.ViewHolder {
-        TextView title, description, starCount, price;
-
+        TextView title, description, price;
+        RatingBar starCount;
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
 

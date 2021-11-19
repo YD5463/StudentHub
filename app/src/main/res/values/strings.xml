@@ -39,4 +39,6 @@
     <string name="new_post">New Post</string>
     <string name="setting">Setting</string>
     <string name="logout">Logout</string>
+    <string name="post_image">Post Image</string>
+    <string name="price_placeholder">ILS 100</string>
 </resources>
