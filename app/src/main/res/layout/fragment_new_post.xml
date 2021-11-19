@@ -6,7 +6,7 @@
     android:backgroundTint="#CECECE"
     android:paddingLeft="25dp"
     android:paddingRight="25dp"
-    tools:context=".navigation.posts.PostsFragment"
+    tools:context=".new_post.NewPostFragment"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"

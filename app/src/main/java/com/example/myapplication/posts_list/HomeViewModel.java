@@ -1,4 +1,4 @@
-package com.example.myapplication.navigation.home;
+package com.example.myapplication.posts_list;
 
 import androidx.lifecycle.ViewModel;
 

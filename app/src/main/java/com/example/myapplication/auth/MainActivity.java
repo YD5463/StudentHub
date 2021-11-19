@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.auth;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 
+import com.example.myapplication.Home;
+import com.example.myapplication.R;
 import com.example.myapplication.auth.Login;
 import com.example.myapplication.auth.Signup;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
-            Intent goto_home = new Intent(getApplicationContext(),Home.class);
+            Intent goto_home = new Intent(getApplicationContext(), Home.class);
             startActivity(goto_home);
         }
     }

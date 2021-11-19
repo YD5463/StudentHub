@@ -1,4 +1,4 @@
-package com.example.myapplication.navigation.home;
+package com.example.myapplication.posts_list;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:backgroundTint="#CECECE"
-    tools:context=".navigation.home.HomeFragment">
+    tools:context=".posts_list.HomeFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/posts"

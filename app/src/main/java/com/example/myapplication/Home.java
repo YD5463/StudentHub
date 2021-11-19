@@ -1,11 +1,8 @@
 package com.example.myapplication;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
-import com.example.myapplication.auth.Login;
-import com.example.myapplication.navigation.posts.PostsFragment;
+import com.example.myapplication.new_post.NewPostFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,7 +35,7 @@ public class Home extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         binding.fab.setOnClickListener(v -> {
-            Fragment fragment = new PostsFragment();
+            Fragment fragment = new NewPostFragment();
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
         });

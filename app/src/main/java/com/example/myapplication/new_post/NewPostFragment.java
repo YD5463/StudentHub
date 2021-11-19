@@ -1,4 +1,4 @@
-package com.example.myapplication.navigation.posts;
+package com.example.myapplication.new_post;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -43,11 +43,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class PostsFragment extends Fragment {
-    static final private String TAG = "PostsFragment";
+public class NewPostFragment extends Fragment {
+    static final private String TAG = "NewPostFragment";
     static final private int MAX_IMAGES = 3;
 
-    private PostsViewModel postsViewModel;
+    private NewPostViewModel newPostViewModel;
     private FragmentNewPostBinding binding;
 
     private int imagesCount = 0;
@@ -145,7 +145,7 @@ public class PostsFragment extends Fragment {
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        postsViewModel = new ViewModelProvider(this).get(PostsViewModel.class);
+        newPostViewModel = new ViewModelProvider(this).get(NewPostViewModel.class);
 
         binding = FragmentNewPostBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
