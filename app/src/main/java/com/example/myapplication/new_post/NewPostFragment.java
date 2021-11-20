@@ -33,6 +33,7 @@ import com.example.myapplication.database.PostData;
 import com.example.myapplication.databinding.FragmentNewPostBinding;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.UploadTask;
@@ -115,6 +116,7 @@ public class NewPostFragment extends Fragment {
         ProgressDialog mDialog = createProgressDialog();
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         String key = mDatabase.child("products").push().getKey();
+        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Tasks.whenAllComplete(db_tasks).addOnCompleteListener(t-> {
             for (Task<UploadTask.TaskSnapshot> db_task : db_tasks) {
                 if(db_task.isSuccessful()){
@@ -122,10 +124,13 @@ public class NewPostFragment extends Fragment {
                     Log.e(TAG,path);
                     imagesUris.add(path);
                 }else{
+                    mDialog.cancel();
                     Log.e(TAG,db_task.getException().getMessage());
+                    Toast.makeText(context, "Add Post Failed.",Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
-            PostData post = new PostData(title.getText().toString(),description.getText().toString(), getPrice(),key,imagesUris);
+            PostData post = new PostData(title.getText().toString(),description.getText().toString(), getPrice(),user_id,imagesUris);
             Map<String, Object> postValues = post.toMap();
             Task<?> addToDBTask = mDatabase.child("/posts/" + key).updateChildren(postValues);
 
