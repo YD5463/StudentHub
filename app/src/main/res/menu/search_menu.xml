@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Search Data"
+    <item android:title="@string/search_data"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always"
         android:icon="@drawable/ic_baseline_search_24"

@@ -41,4 +41,5 @@
     <string name="logout">Logout</string>
     <string name="post_image">Post Image</string>
     <string name="price_placeholder">ILS 100</string>
+    <string name="search_data">Search Data</string>
 </resources>

@@ -6,6 +6,7 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +24,9 @@ public class PostData {
     @SuppressLint("SimpleDateFormat")
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-
+    public PostData clone(){
+        return new PostData(title,description,price,userId,new ArrayList<>(images));
+    }
     public String getTitle() {
         return title;
     }

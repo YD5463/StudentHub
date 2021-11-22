@@ -2,6 +2,7 @@ package com.example.myapplication.posts_list;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,7 +46,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
     private int currentPage = 0;
     private ProgressBar mProgressBar;
     private static final int PAGE_SIZE = 10;
-
+    private String curr_query_search = "";
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -56,7 +57,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         mProgressBar = root.findViewById(R.id.progress_bar_home);
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        mAdapter = new PostAdapter(postsList);
+        mAdapter = new PostAdapter(filtered_list);
         LinearLayoutManager mLayoutManager =
                 new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -98,7 +99,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
                 .addValueEventListener(new ValueEventListener() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if(!dataSnapshot.hasChildren()){
                             Toast.makeText(getContext(), "No more Posts", Toast.LENGTH_SHORT).show();
                             currentPage--;
@@ -106,13 +107,15 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             PostData post = data.getValue(PostData.class);
                             postsList.add(post);
+                            filtered_list.add(post);
                             mAdapter.notifyDataSetChanged();
                         }
+                        processSearch(curr_query_search);
                         mProgressBar.setVisibility(RecyclerView.GONE);
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
                         Log.e(TAG,"onCancelled: "+databaseError.getMessage());
                         mProgressBar.setVisibility(RecyclerView.GONE);
                     }
@@ -155,10 +158,24 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         processSearch(newText);
         return false;
     }
-
-    /* Fetch filtered posts from firebase */
+    /**
+     *
+     * @param s search query
+     */
     private void processSearch(String s) {
-
         //TODO: don't search in the db!!!!! that can take forever
+        Log.d(TAG,"Searching: "+s);
+        curr_query_search = s;
+        if(s.isEmpty()){ // deep copy original list(without deep coping postData)
+            filtered_list.addAll(postsList);
+        }
+        else{
+            filtered_list.clear();
+            for(PostData post : postsList){
+                if(post.getTitle().contains(s) || post.getDescription().contains(s)){
+                    filtered_list.add(post);
+                }
+            }
+        }
     }
 }
