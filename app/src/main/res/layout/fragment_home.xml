@@ -7,6 +7,14 @@
     android:orientation="vertical"
     android:backgroundTint="#CECECE"
     tools:context=".posts_list.HomeFragment">
+    <ProgressBar
+        android:id="@+id/progress_bar_home"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        >
+    </ProgressBar>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/posts"

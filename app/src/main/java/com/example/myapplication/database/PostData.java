@@ -1,8 +1,12 @@
 package com.example.myapplication.database;
 
+import android.annotation.SuppressLint;
+
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +18,11 @@ public class PostData {
     private String userId;
     private int price;
     private int starCount = 0;
+    private String creation_date;
+    private List<String> images;
+    @SuppressLint("SimpleDateFormat")
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 
     public String getTitle() {
         return title;
@@ -63,7 +72,6 @@ public class PostData {
         this.images = images;
     }
 
-    private List<String> images;
     public PostData(){
 
     }
@@ -73,6 +81,7 @@ public class PostData {
         this.price = price;
         this.userId = userId;
         this.images = images;
+        creation_date = DATE_FORMAT.format(new Date());
     }
     @Exclude
     public Map<String, Object> toMap() {
@@ -83,6 +92,7 @@ public class PostData {
         result.put("description", description);
         result.put("starCount",starCount);
         result.put("images",images);
+        result.put("creation_date",creation_date);
         return result;
     }
 
