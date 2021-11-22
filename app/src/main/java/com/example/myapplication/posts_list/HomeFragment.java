@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +39,8 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
     private FragmentHomeBinding binding;
     private RecyclerView recyclerView;
     private DatabaseReference mDatabase;
-    final List<PostData> qpostsList = new ArrayList<>();
+    final List<PostData> postsList = new ArrayList<>();
+    final List<PostData> filtered_list = new ArrayList<>();
     private PostAdapter mAdapter;
     private int currentPage = 0;
     private ProgressBar mProgressBar;
@@ -54,7 +56,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         mProgressBar = root.findViewById(R.id.progress_bar_home);
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        mAdapter = new PostAdapter(qpostsList);
+        mAdapter = new PostAdapter(postsList);
         LinearLayoutManager mLayoutManager =
                 new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -66,14 +68,29 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
                 load_next_page();
             }
         });
-        Log.d(TAG,"Finish oncreate");
         load_next_page();
         return root;
     }
 
+    /**
+     * checks if device is connected to internet(There is a possibility it's
+     * connected to a network but not to internet).
+     * @return bool isInternetAvailable
+     */
+    public boolean isInternetAvailable() {
+        try {
+            InetAddress ipAddr = InetAddress.getByName("www.google.com");
+            return !ipAddr.equals("");
+        } catch (Exception e) {
+            return false;
+        }
+    }
     private void load_next_page(){
-        Log.d(TAG,"Loading next page");
         currentPage++;
+//        if(!isInternetAvailable()){
+//            mProgressBar.setVisibility(RecyclerView.GONE);
+//            Toast.makeText(getContext(),"Interment Connection Error",Toast.LENGTH_LONG).show();
+//        }
         mDatabase.child("posts")
                 .limitToFirst(PAGE_SIZE)
                 .startAt(currentPage*PAGE_SIZE)
@@ -82,15 +99,13 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.d(TAG,"On Data Change");
-
                         if(!dataSnapshot.hasChildren()){
                             Toast.makeText(getContext(), "No more Posts", Toast.LENGTH_SHORT).show();
                             currentPage--;
                         }
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             PostData post = data.getValue(PostData.class);
-                            qpostsList.add(post);
+                            postsList.add(post);
                             mAdapter.notifyDataSetChanged();
                         }
                         mProgressBar.setVisibility(RecyclerView.GONE);
@@ -98,8 +113,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        Log.d(TAG,"On Error");
-
+                        Log.e(TAG,"onCancelled: "+databaseError.getMessage());
                         mProgressBar.setVisibility(RecyclerView.GONE);
                     }
                 });
@@ -144,6 +158,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
 
     /* Fetch filtered posts from firebase */
     private void processSearch(String s) {
+
         //TODO: don't search in the db!!!!! that can take forever
     }
 }
