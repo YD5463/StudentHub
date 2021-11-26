@@ -3,9 +3,16 @@ package com.example.myapplication;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -17,8 +24,6 @@ import java.io.ByteArrayOutputStream;
 
 public class FirebaseUtils {
 
-    private final static FirebaseStorage storage = FirebaseStorage.getInstance();
-    private final static StorageReference storageRef = storage.getReference();
     public void getCurrUser(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -37,17 +42,10 @@ public class FirebaseUtils {
         drawable.draw(canvas);
         return bitmap;
     }
-    public static Task<UploadTask.TaskSnapshot> uploadImage(ImageView image, String imageUniqueName){
+    public static byte[] before_upload(ImageView image){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Bitmap bitmap = imageViewToBitmap(image);
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-        UploadTask uploadTask = storageRef.child(imageUniqueName).putBytes(data);
-        return uploadTask.continueWithTask(task -> {
-            if (!task.isSuccessful()) {
-                throw task.getException();
-            }
-            return task;
-        });
+        return baos.toByteArray();
     }
 }

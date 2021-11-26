@@ -36,10 +36,13 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -53,7 +56,7 @@ public class NewPostFragment extends Fragment {
 
     private int imagesCount = 0;
     private List<ImageView> images;
-    private List<String> imagesUris;
+    private List<String> imagesUris = new ArrayList<>();//Collections.synchronizedList(new ArrayList<String>());;
     private EditText title;
     private EditText description;
     private EditText price;
@@ -87,10 +90,17 @@ public class NewPostFragment extends Fragment {
         mDialog.show();
         return mDialog;
     }
-    private List<Task<UploadTask.TaskSnapshot>> upload(){
-        List<Task<UploadTask.TaskSnapshot>> tasks = new ArrayList<>(imagesCount);
+    private List<UploadTask> upload(){
+        List<UploadTask> tasks = new ArrayList<>();
         for(int i=0;i<imagesCount;i++){
-            tasks.add(FirebaseUtils.uploadImage(images.get(i), UUID.randomUUID().toString()));
+            final StorageReference storageReference = FirebaseStorage.getInstance().
+                    getReference("posts-images/" + UUID.randomUUID().toString() + ".jpg");
+            storageReference.putBytes(FirebaseUtils.before_upload(images.get(i))).
+                    addOnSuccessListener(taskSnapshot -> storageReference.getDownloadUrl().addOnCompleteListener(task -> {
+                        imagesUris.add(task.getResult().toString());
+                    })).
+                    addOnFailureListener(e -> Log.e("FirebaseUtils","Image Uploading was failed:\n"+e.getMessage()));;
+
         }
         return tasks;
     }
@@ -110,48 +120,56 @@ public class NewPostFragment extends Fragment {
         String priceStr = price.getText().toString();
         return !priceStr.isEmpty() ? Integer.parseInt(price.getText().toString()) : 0;
     }
-    private void onSubmit(View v){
-        List<Task<UploadTask.TaskSnapshot>> db_tasks = upload();
-        Context context = getContext();
-        ProgressDialog mDialog = createProgressDialog();
+
+    private void upload_post(ProgressDialog mDialog,Context context,View v){
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         String key = mDatabase.child("products").push().getKey();
         String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Tasks.whenAllComplete(db_tasks).addOnCompleteListener(t-> {
-            for (Task<UploadTask.TaskSnapshot> db_task : db_tasks) {
-                if(db_task.isSuccessful()){
-                    String path = db_task.getResult().getUploadSessionUri().getPath();
-                    Log.e(TAG,path);
-                    imagesUris.add(path);
-                }else{
-                    mDialog.cancel();
-                    Log.e(TAG,db_task.getException().getMessage());
-                    Toast.makeText(context, "Add Post Failed.",Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        PostData post = new PostData(title.getText().toString(),description.getText().toString(), getPrice(),user_id,imagesUris);
+        Map<String, Object> postValues = post.toMap();
+        Task<?> addToDBTask = mDatabase.child("/posts/" + key).updateChildren(postValues);
+        addToDBTask.addOnCompleteListener(task->{
+            mDialog.cancel();
+            if(task.isSuccessful()){
+                cleanForm();
+                Utils.hideKeyboardFrom(context,v);
+                Toast.makeText(context, "Post Added Successfully.",
+                        Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(context, "Add Post Failed.",
+                        Toast.LENGTH_SHORT).show();
             }
-            PostData post = new PostData(title.getText().toString(),description.getText().toString(), getPrice(),user_id,imagesUris);
-            Map<String, Object> postValues = post.toMap();
-            Task<?> addToDBTask = mDatabase.child("/posts/" + key).updateChildren(postValues);
+        });
+    }
+    private void onSubmit(View v){
+        Context context = getContext();
+        ProgressDialog mDialog = createProgressDialog();
+        for(int i=0;i<imagesCount;i++){
+            Log.e(TAG,"Image count"+imagesCount);
+            final StorageReference storageReference = FirebaseStorage.getInstance().
+                    getReference("posts-images/" + UUID.randomUUID().toString() + ".jpg");
+                    storageReference.putBytes(FirebaseUtils.before_upload(images.get(i))).
+                    addOnSuccessListener(taskSnapshot -> storageReference.getDownloadUrl().addOnCompleteListener(upload_task -> {
+                        Log.e(TAG,"im here1");
+                        imagesUris.add(upload_task.getResult().toString());
+                        Log.d(TAG,upload_task.getResult().toString());
+                        if(imagesUris.size() == imagesCount){
+                            upload_post(mDialog,context,v);
+                        }
+                    })).
+                    addOnFailureListener(e -> {
+                        mDialog.cancel();
+                        Toast.makeText(context,"Failed to upload post",Toast.LENGTH_SHORT).show();
+                        Log.e("FirebaseUtils", "Image Uploading was failed:\n" + e.getMessage());
+                    });
 
-            addToDBTask.addOnCompleteListener(task->{
-                mDialog.cancel();
-                if(task.isSuccessful()){
-                    cleanForm();
-                    Utils.hideKeyboardFrom(context,v);
-                    Toast.makeText(context, "Post Added Successfully.",
-                            Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(context, "Add Post Failed.",
-                            Toast.LENGTH_SHORT).show();
-                }
-                });
-            });
+        }
+
+
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         newPostViewModel = new ViewModelProvider(this).get(NewPostViewModel.class);
-
         binding = FragmentNewPostBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         init(root);

@@ -20,7 +20,7 @@ public class PostData {
     private int price;
     private int starCount = 0;
     private String creation_date;
-    private List<String> images;
+    private List<String> images = new ArrayList<>();
     @SuppressLint("SimpleDateFormat")
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 

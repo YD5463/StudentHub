@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser != null){
             Intent goto_home = new Intent(getApplicationContext(), Home.class);
             startActivity(goto_home);
+            finishAfterTransition();
         }
     }
 

@@ -145,12 +145,13 @@ public class Signup extends FormValidator {
         createUserTask.addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         if(!is_profile_image_default){
-                            Task<UploadTask.TaskSnapshot> uploadImageTask = FirebaseUtils.uploadImage(profile_image,UUID.randomUUID().toString());
-                            uploadImageTask.addOnCompleteListener(t2->{
-                                if(t2.isSuccessful()) {
-                                    edit_user(t2.getResult().getUploadSessionUri().toString(),mDialog);
-                                }//TODO: handle failed to upload
-                            });
+                            edit_user("",mDialog);
+//                            Task<UploadTask.TaskSnapshot> uploadImageTask = FirebaseUtils.uploadImage(profile_image,UUID.randomUUID().toString());
+//                            uploadImageTask.addOnCompleteListener(t2->{
+//                                if(t2.isSuccessful()) {
+//                                    edit_user(t2.getResult().getUploadSessionUri().toString(),mDialog);
+//                                }//TODO: handle failed to upload
+//                            });
                         }else{
                             edit_user("",mDialog);
                         }
