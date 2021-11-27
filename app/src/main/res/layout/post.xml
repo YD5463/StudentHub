@@ -52,7 +52,7 @@
                         android:textAlignment="viewEnd"
                         android:padding="10dp"
                         android:textColor="#000000"
-                        android:text="Title"
+                        android:text="@string/title"
                         />
 
                     <TextView
@@ -61,7 +61,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="5dp"
-                        android:text="Description"
+                        android:text="@string/description"
                         android:textAlignment="viewStart"
                         />
                 </LinearLayout>

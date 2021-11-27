@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
             Intent goto_home = new Intent(getApplicationContext(), Home.class);

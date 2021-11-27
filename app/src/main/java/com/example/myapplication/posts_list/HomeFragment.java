@@ -2,7 +2,6 @@ package com.example.myapplication.posts_list;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,7 +20,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.EndlessRecyclerOnScrollListener;
+import com.example.myapplication.RecyclerOnScrollListener;
 import com.example.myapplication.R;
 import com.example.myapplication.database.PostData;
 import com.example.myapplication.databinding.FragmentHomeBinding;
@@ -31,21 +30,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener{
     private static final String TAG = "HomeFragment";
     private FragmentHomeBinding binding;
-    private RecyclerView recyclerView;
-    private DatabaseReference mDatabase;
-    final List<PostData> postsList = new ArrayList<>();
+    private RecyclerView recycler_view;
+    private DatabaseReference database;
+    final List<PostData> posts_list = new ArrayList<>();
     final List<PostData> filtered_list = new ArrayList<>();
-    private PostAdapter mAdapter;
-    private int currentPage = 0;
-    private ProgressBar mProgressBar;
+    private PostAdapter post_adapter;
+    private ProgressBar progress_bar;
+    private boolean is_list_ends = false;
     private static final int PAGE_SIZE = 10;
+
     private String curr_query_search = "";
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -53,74 +52,69 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         setHasOptionsMenu(true);
         View root = binding.getRoot();
 
-        recyclerView = root.findViewById(R.id.posts);
-        mProgressBar = root.findViewById(R.id.progress_bar_home);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        recycler_view = root.findViewById(R.id.posts);
+        progress_bar = root.findViewById(R.id.progress_bar_home);
+        database = FirebaseDatabase.getInstance().getReference();
 
-        mAdapter = new PostAdapter(filtered_list);
-        LinearLayoutManager mLayoutManager =
-                new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(mLayoutManager) {
-            @Override
-            public void onLoadMore(int current_page) {
-                load_next_page();
-            }
-        });
-        load_next_page();
+        init_list();
         return root;
     }
 
-    /**
-     * checks if device is connected to internet(There is a possibility it's
-     * connected to a network but not to internet).
-     * @return bool isInternetAvailable
-     */
-    public boolean isInternetAvailable() {
-        try {
-            InetAddress ipAddr = InetAddress.getByName("www.google.com");
-            return !ipAddr.equals("");
-        } catch (Exception e) {
-            return false;
-        }
+    private void init_list(){
+        post_adapter = new PostAdapter(filtered_list);
+        LinearLayoutManager mLayoutManager =
+                new LinearLayoutManager(getContext());
+        recycler_view.setLayoutManager(mLayoutManager);
+        recycler_view.setItemAnimator(new DefaultItemAnimator());
+        recycler_view.setAdapter(post_adapter);
+        //TODO: find replacement for setOnScrollListener
+        recycler_view.setOnScrollListener(new RecyclerOnScrollListener(mLayoutManager) {
+            @Override
+            public void onLoadMore(int current_page) {
+                load_next_page(current_page);
+            }
+            @Override
+            public boolean isListEnds(){
+                return is_list_ends;
+            }
+        });
+        load_next_page(0);
     }
-    private void load_next_page(){
-        currentPage++;
-//        if(!isInternetAvailable()){
-//            mProgressBar.setVisibility(RecyclerView.GONE);
-//            Toast.makeText(getContext(),"Interment Connection Error",Toast.LENGTH_LONG).show();
-//        }
-        mDatabase.child("posts")
+    private void load_next_page(int curr_page){
+        //TODO: check network connection
+        Log.d(TAG,"getting next page number: "+curr_page);
+        database.child("posts")
                 .limitToFirst(PAGE_SIZE)
-                .startAt(currentPage*PAGE_SIZE)
-                .orderByChild("title")
+                .startAt(curr_page*PAGE_SIZE)
+                .orderByChild("title") //TODO: change to creation time
                 .addValueEventListener(new ValueEventListener() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if(!dataSnapshot.hasChildren()){
                             Toast.makeText(getContext(), "No more Posts", Toast.LENGTH_SHORT).show();
-                            currentPage--;
                         }
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             PostData post = data.getValue(PostData.class);
-                            postsList.add(post);
-                            filtered_list.add(post);
-                            mAdapter.notifyDataSetChanged();
+                            if(!posts_list.isEmpty() && post.getTitle().equals(posts_list.get(0).getTitle())){
+                                progress_bar.setVisibility(RecyclerView.GONE);
+                                is_list_ends = true;
+                                return;
+                            }
+                            posts_list.add(post);
+                            post_adapter.notifyDataSetChanged();
                         }
                         processSearch(curr_query_search);
-                        mProgressBar.setVisibility(RecyclerView.GONE);
+                        progress_bar.setVisibility(RecyclerView.GONE);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         Log.e(TAG,"onCancelled: "+databaseError.getMessage());
-                        mProgressBar.setVisibility(RecyclerView.GONE);
+                        progress_bar.setVisibility(RecyclerView.GONE);
                     }
                 });
-        mProgressBar.setVisibility(RecyclerView.VISIBLE);
+        progress_bar.setVisibility(RecyclerView.VISIBLE);
     }
 
 
@@ -163,15 +157,14 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
      * @param s search query
      */
     private void processSearch(String s) {
-        //TODO: don't search in the db!!!!! that can take forever
         Log.d(TAG,"Searching: "+s);
         curr_query_search = s;
         if(s.isEmpty()){ // deep copy original list(without deep coping postData)
-            filtered_list.addAll(postsList);
+            filtered_list.addAll(posts_list);
         }
         else{
             filtered_list.clear();
-            for(PostData post : postsList){
+            for(PostData post : posts_list){
                 if(post.getTitle().contains(s) || post.getDescription().contains(s)){
                     filtered_list.add(post);
                 }

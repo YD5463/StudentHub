@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -150,7 +151,6 @@ public class NewPostFragment extends Fragment {
                     getReference("posts-images/" + UUID.randomUUID().toString() + ".jpg");
                     storageReference.putBytes(FirebaseUtils.before_upload(images.get(i))).
                     addOnSuccessListener(taskSnapshot -> storageReference.getDownloadUrl().addOnCompleteListener(upload_task -> {
-                        Log.e(TAG,"im here1");
                         imagesUris.add(upload_task.getResult().toString());
                         Log.d(TAG,upload_task.getResult().toString());
                         if(imagesUris.size() == imagesCount){
@@ -175,6 +175,25 @@ public class NewPostFragment extends Fragment {
         init(root);
         return root;
     }
+
+    private void add_image(ActivityResult result){
+        //TODO: extract to some utils class
+        if (result.getResultCode() == Activity.RESULT_OK) {
+            Intent data = result.getData();
+            assert data != null;
+            Uri imageUri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
+                images.get(images.size()-1).setImageBitmap(bitmap);
+                imagesCount++;
+                if(images.size()<MAX_IMAGES){
+                    images.add(createDefaultImage());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     private void init(View root){
         title = root.findViewById(R.id.post_title);
         description = root.findViewById(R.id.post_description);
@@ -188,23 +207,7 @@ public class NewPostFragment extends Fragment {
         addPostBtn.setOnClickListener(this::onSubmit);
         someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent data = result.getData();
-                        assert data != null;
-                        Uri imageUri = data.getData();
-                        try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
-                            images.get(images.size()-1).setImageBitmap(bitmap);
-                            imagesCount++;
-                            if(images.size()<MAX_IMAGES){
-                                images.add(createDefaultImage());
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+                this::add_image);
     }
     void cleanForm(){
         title.setText("");
