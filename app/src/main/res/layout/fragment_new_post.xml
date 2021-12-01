@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="#CECECE"
+    android:layout_marginTop="40dp"
     android:paddingLeft="25dp"
     android:paddingRight="25dp"
     tools:context=".new_post.NewPostFragment"

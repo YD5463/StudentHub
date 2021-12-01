@@ -1,91 +1,94 @@
 package com.example.myapplication;
 
+
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static org.hamcrest.core.IsNot.not;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 
-import static org.hamcrest.core.IsInstanceOf.any;
-import static org.junit.Assert.*;
 
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-
-import androidx.annotation.IdRes;
-import androidx.test.espresso.AmbiguousViewMatcherException;
-import androidx.test.espresso.NoMatchingRootException;
-import androidx.test.espresso.NoMatchingViewException;
-import androidx.test.espresso.UiController;
-import androidx.test.espresso.ViewAction;
-import androidx.test.espresso.ViewInteraction;
+import androidx.annotation.StringRes;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import com.example.myapplication.auth.Login;
 import com.google.firebase.auth.FirebaseAuth;
 
-import org.hamcrest.Matcher;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 @RunWith(AndroidJUnit4.class)
 public class LoginTest {
 
         @Rule
-        public ActivityTestRule<com.example.myapplication.auth.Login> mActivityTestRule = new ActivityTestRule<com.example.myapplication.auth.Login>(com.example.myapplication.auth.Login.class);
+        public ActivityTestRule<Login> mActivityTestRule = new ActivityTestRule<com.example.myapplication.auth.Login>(com.example.myapplication.auth.Login.class);
 
-        public com.example.myapplication.auth.Login loginActivity;
 
-        @Before
-        public void setUp() throws Exception {
-            loginActivity = mActivityTestRule.getActivity();
+        private String getString(@StringRes int resourceId) {
+            return mActivityTestRule.getActivity().getString(resourceId);
         }
+    @Test
+    public void emailIsEmpty() {
+        onView(withId(R.id.email_input)).perform(clearText());
+        onView(withId(R.id.login_btn)).perform(click());
+//        onView(withId(R.id.email_input)).check(matches(withError(getString(R.string.error_field_required))));
+    }
 
-        static void waitFor(int ms) {
-            final CountDownLatch signal = new CountDownLatch(1);
+    @Test
+    public void passwordIsEmpty() {
+        onView(withId(R.id.email_input)).perform(typeText("email@email.com"), closeSoftKeyboard());
+        onView(withId(R.id.password_input)).perform(clearText());
+        onView(withId(R.id.login_btn)).perform(click());
+//        onView(withId(R.id.password_input)).check(matches(withError(getString(R.string.error_field_required))));
+    }
 
-            try {
-                signal.await(ms, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException e) {
-                Assert.fail(e.getMessage());
-            }
-        }
+    @Test
+    public void emailIsInvalid() {
+        onView(withId(R.id.email_input)).perform(typeText("invalid"), closeSoftKeyboard());
+        onView(withId(R.id.login_btn)).perform(click());
+//        onView(withId(R.id.email_input)).check(matches(withError(getString(R.string.error_invalid_email))));
+    }
+
+    @Test
+    public void passwordIsTooShort() {
+        onView(withId(R.id.email_input)).perform(typeText("email@email.com"), closeSoftKeyboard());
+        onView(withId(R.id.password_input)).perform(typeText("1234"), closeSoftKeyboard());
+        onView(withId(R.id.login_btn)).perform(click());
+//        onView(withId(R.id.password_input)).check(matches(withError(getString(R.string.error_invalid_password))));
+    }
         @Test
         public void test_not_logged_in_user(){
-            getInstrumentation().runOnMainSync(() -> {
-                FirebaseAuth.getInstance().signOut();
-                EditText email = loginActivity.findViewById(R.id.email_input);
-                EditText pass = loginActivity.findViewById(R.id.password_input);
-                email.setText("somemail@gmail.com");
-                pass.setText("longpass123");
-                Button loginBtn = loginActivity.findViewById(R.id.login_btn);
-                loginBtn.performClick();
-                assertNull(FirebaseAuth.getInstance().getCurrentUser());
-            });
+//            getInstrumentation().runOnMainSync(() -> {
+//                FirebaseAuth.getInstance().signOut();
+//                EditText email = loginActivity.findViewById(R.id.email_input);
+//                EditText pass = loginActivity.findViewById(R.id.password_input);
+//                email.setText("somemail@gmail.com");
+//                pass.setText("longpass123");
+//                Button loginBtn = loginActivity.findViewById(R.id.login_btn);
+//                loginBtn.performClick();
+//                assertNull(FirebaseAuth.getInstance().getCurrentUser());
+//            });
         }
 
         @Test
-        public void test_logged_in_user(){
-            getInstrumentation().runOnMainSync(() -> {
-                FirebaseAuth.getInstance().signOut();
-                EditText email = loginActivity.findViewById(R.id.email_input);
-                EditText pass = loginActivity.findViewById(R.id.password_input);
-                email.setText("yosefdanan555@gmail.com");
-                pass.setText("yosef5463");
-                Button loginBtn = loginActivity.findViewById(R.id.login_btn);
-                loginBtn.performClick();
-                waitFor(1000); //TODO: change to smart wait
-                assertNotNull(FirebaseAuth.getInstance().getCurrentUser());
-            });
+        public void test_logged_in_user() throws InterruptedException {
+            FirebaseAuth.getInstance().signOut();
+            onView(withId(R.id.email_input)).perform(typeText("yosefdanan555@gmail.com"), closeSoftKeyboard());
+            onView(withId(R.id.password_input)).perform(typeText("yosef5463"), closeSoftKeyboard());
+            onView(withId(R.id.login_btn)).perform(click());
+
+            onView(withText(getString(R.string.please_wait)))
+                    .check(matches(not(isDisplayed())));
         }
         @Test
         public void test_invalid_data(){
@@ -97,10 +100,5 @@ public class LoginTest {
             //TODO
         }
 
-
-        @After
-        public void tearDown() throws Exception {
-            loginActivity = null;
-        }
     }
 

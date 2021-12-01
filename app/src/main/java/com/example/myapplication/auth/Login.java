@@ -54,7 +54,7 @@ public class Login extends FormValidator{
         String emailVal = email.getText().toString();
         String passwordVal = password.getText().toString();
         ProgressDialog mDialog = new ProgressDialog(Login.this);
-        mDialog.setMessage("Please wait...");
+        mDialog.setMessage(Login.this.getString(R.string.please_wait));
         mDialog.setCancelable(true);
         mDialog.show();
         mAuth.signInWithEmailAndPassword(emailVal, passwordVal)
