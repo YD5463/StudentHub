@@ -25,15 +25,15 @@
         android:name="com.example.myapplication.my_profile.AccountFragment"
         android:label="@string/title_account"
         tools:layout="@layout/fragment_account" >
-        <action
-            android:id="@+id/action_navigation_myAccount_to_myPostsFragment"
-            app:destination="@id/myPostsFragment" />
+<!--        <action-->
+<!--            android:id="@+id/action_navigation_myAccount_to_myPostsFragment"-->
+<!--            app:destination="@+id/myPostsFragment" />-->
     </fragment>
 
-    <!--My Posts Fragment-->
-    <fragment
-        android:id="@+id/myPostsFragment"
-        android:name="com.example.myapplication.MyPostsFragment"
-        android:label="fragment_my_posts_list"
-        tools:layout="@layout/fragment_my_posts_list" />
+<!--    &lt;!&ndash;My Posts Fragment&ndash;&gt;-->
+<!--    <fragment-->
+<!--        android:id="@+id/myPostsFragment"-->
+<!--        android:name="com.example.myapplication.MyPostsFragment"-->
+<!--        android:label="fragment_my_posts_list"-->
+<!--        tools:layout="@layout/fragment_my_posts_list" />-->
 </navigation>

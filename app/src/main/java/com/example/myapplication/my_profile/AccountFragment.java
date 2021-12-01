@@ -25,18 +25,15 @@ public class AccountFragment extends Fragment{
     private FragmentAccountBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         binding = FragmentAccountBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        TextView textView = binding.textNotifications;
-        accountViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        Button logout = root.findViewById(R.id.logout);
-        logout.setOnClickListener(l->{
-            Intent i = new Intent(getActivity(), MainActivity.class);
-            startActivity(i);
-            ((Activity) getActivity()).overridePendingTransition(0, 0);
-            FirebaseAuth.getInstance().signOut();
-        });
+//        Button logout = root.findViewById(R.id.logout);
+//        logout.setOnClickListener(l->{
+//            Intent i = new Intent(getActivity(), MainActivity.class);
+//            startActivity(i);
+//            ((Activity) getActivity()).overridePendingTransition(0, 0);
+//            FirebaseAuth.getInstance().signOut();
+//        });
         return root;
     }
 

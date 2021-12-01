@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.myapplication.FormValidator;
+import com.example.myapplication.utils.FormValidator;
 import com.example.myapplication.Home;
 import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;

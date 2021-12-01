@@ -27,13 +27,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.myapplication.FirebaseUtils;
+import com.example.myapplication.utils.FirebaseUtils;
 import com.example.myapplication.R;
-import com.example.myapplication.Utils;
+import com.example.myapplication.utils.Utils;
 import com.example.myapplication.database.PostData;
 import com.example.myapplication.databinding.FragmentNewPostBinding;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -43,7 +42,6 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;

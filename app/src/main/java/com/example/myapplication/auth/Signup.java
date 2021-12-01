@@ -17,8 +17,7 @@ import android.view.View;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
-import com.example.myapplication.FirebaseUtils;
-import com.example.myapplication.FormValidator;
+import com.example.myapplication.utils.FormValidator;
 import com.example.myapplication.Home;
 import com.example.myapplication.R;
 import com.example.myapplication.database.UserData;
@@ -26,7 +25,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.UploadTask;
 import com.mobsandgeeks.saripaar.annotation.ConfirmPassword;
 import com.mobsandgeeks.saripaar.annotation.Email;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
@@ -34,7 +32,6 @@ import com.mobsandgeeks.saripaar.annotation.Password;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
 
 import java.io.IOException;
-import java.util.UUID;
 
 
 public class Signup extends FormValidator {

@@ -15,12 +15,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.RecyclerOnScrollListener;
+import com.example.myapplication.utils.RecyclerOnScrollListener;
 import com.example.myapplication.R;
 import com.example.myapplication.database.PostData;
 import com.example.myapplication.databinding.FragmentHomeBinding;
@@ -47,7 +46,6 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
 
     private String curr_query_search = "";
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         setHasOptionsMenu(true);
         View root = binding.getRoot();

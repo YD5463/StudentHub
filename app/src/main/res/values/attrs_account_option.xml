@@ -1,0 +1,7 @@
+<resources>
+    <declare-styleable name="AccountOption">
+        <attr name="title" format="string" />
+        <attr name="backgroundColor" format="color" />
+        <attr name="icon" format="reference" />
+    </declare-styleable>
+</resources>

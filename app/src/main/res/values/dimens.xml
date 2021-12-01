@@ -6,4 +6,5 @@
     <dimen name="add_post_image_width">75dp</dimen>
     <dimen name="add_post_image_height">75dp</dimen>
     <dimen name="add_post_image_padding">5dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>
