@@ -29,12 +29,14 @@
             android:orientation="vertical"
             >
             <TextView
+                android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Yosef Danan"
                 android:textSize="22sp"
                 />
             <TextView
+                android:id="@+id/user_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="yosefdanan@gmail.com"
@@ -49,7 +51,8 @@
             android:layout_gravity="center"
             />
     </LinearLayout>
-    <com.example.myapplication.AccountOption
+    <com.example.myapplication.my_profile.AccountOption
+        android:layout_marginTop="25dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title="@string/my_posts"
@@ -57,7 +60,7 @@
         app:iconBackground="@color/primary"
         android:id="@+id/my_posts"
         />
-    <com.example.myapplication.AccountOption
+    <com.example.myapplication.my_profile.AccountOption
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title="@string/logout"

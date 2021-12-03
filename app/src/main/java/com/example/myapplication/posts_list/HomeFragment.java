@@ -100,7 +100,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
                                 return;
                             }
                             posts_list.add(post);
-                            post_adapter.notifyDataSetChanged();
+                            getActivity().runOnUiThread(()->post_adapter.notifyDataSetChanged());
                         }
                         processSearch(curr_query_search);
                         progress_bar.setVisibility(RecyclerView.GONE);

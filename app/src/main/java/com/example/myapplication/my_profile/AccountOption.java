@@ -1,9 +1,8 @@
-package com.example.myapplication;
+package com.example.myapplication.my_profile;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -14,9 +13,11 @@ import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 
+import com.example.myapplication.R;
+
 
 public class AccountOption extends FrameLayout {
-    private String title;
+    private String title_option;
     private int icon_background;
     private Drawable icon;
 
@@ -41,28 +42,30 @@ public class AccountOption extends FrameLayout {
         TextView titleView = (TextView)root.findViewById(R.id.option_title);
         ImageView iconView = (ImageView)root.findViewById(R.id.option_icon);
         CardView iconWrapper = (CardView)root.findViewById(R.id.option_icon_wrapper);
-        title = a.getString(R.styleable.AccountOption_title);
-        titleView.setText(title);
+        title_option = a.getString(R.styleable.AccountOption_title);
+        titleView.setText(title_option);
         icon = a.getDrawable(R.styleable.AccountOption_icon);
         iconView.setImageDrawable(icon);
         icon_background = a.getColor(R.styleable.AccountOption_iconBackground,Color.BLACK);
         iconWrapper.setBackgroundTintList(ColorStateList.valueOf(icon_background));
         a.recycle();
     }
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+
+    public String getTitle_option() {
+        return title_option;
     }
 
-    public String getTitle() {
-        return title;
+    public void setTitle_option(String title_option) {
+        this.title_option = title_option;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public Drawable getIcon() {
+        return icon;
     }
 
-
+    public void setIcon(Drawable icon) {
+        this.icon = icon;
+    }
 
     public void setIcon_background(int icon_background) {
         this.icon_background = icon_background;

@@ -2,6 +2,7 @@ package com.example.myapplication.posts_list;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,16 +62,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.starCount.setRating(post.getStarCount());
         List<String> images_urls = post.getImages();
         if(images_urls.size() != 0){
-            Executors.newSingleThreadExecutor().execute(()->{
-            try{
-                URL url = new URL(images_urls.get(0));
-                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                holder.image.setImageBitmap(bmp);
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Log.e(TAG,"Error");
-                }
-            });
+            //TODO
+//            AsyncTask.execute(() -> {
+//                try{
+//                    URL url = new URL(images_urls.get(0));
+//                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+//                    holder.image.setImageBitmap(bmp);
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                    Log.e(TAG,"Error: "+e.getMessage());
+//                }
+//            });
         }
     }
 
