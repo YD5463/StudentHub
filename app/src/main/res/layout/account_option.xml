@@ -1,38 +1,36 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <LinearLayout
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/white"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:orientation="horizontal"
-        android:id="@+id/btnMyPosts"
         android:layout_marginBottom="10dp"
         >
         <androidx.cardview.widget.CardView
+            android:id="@+id/option_icon_wrapper"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:backgroundTint="@color/primary"
+            android:backgroundTint="@color/black"
             app:cardCornerRadius="20dp"
             android:layout_gravity="center"
             >
             <ImageView
+                android:id="@+id/option_icon"
                 android:layout_width="26dp"
                 android:layout_height="26dp"
-                android:src="@drawable/ic_baseline_format_list_bulleted_24"
                 android:layout_gravity="center"
-                />
+                android:contentDescription="@string/icon_option" />
         </androidx.cardview.widget.CardView>
         <TextView
+            android:id="@+id/option_title"
             android:paddingLeft="10dp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/my_posts"
+            android:text="Title"
             android:textAlignment="center"
             android:textSize="20sp"
             android:textColor="@color/black"
@@ -43,7 +41,5 @@
             android:layout_height="25dp"
             android:src="@drawable/ic_baseline_arrow_forward_ios_24"
             android:layout_gravity="center"
-            />
-    </LinearLayout>
-
-</FrameLayout>
+            android:contentDescription="@string/go_to_icon" />
+</LinearLayout>

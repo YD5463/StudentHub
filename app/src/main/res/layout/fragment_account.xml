@@ -49,52 +49,21 @@
             android:layout_gravity="center"
             />
     </LinearLayout>
-<!--    <com.example.myapplication.AccountOption-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-
-<!--        />-->
-
-    <LinearLayout
+    <com.example.myapplication.AccountOption
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/white"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:orientation="horizontal"
-        android:id="@+id/logout"
-        >
-        <androidx.cardview.widget.CardView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:backgroundTint="#FFFF66"
-            app:cardCornerRadius="20dp"
-            android:layout_gravity="center"
-            >
-            <ImageView
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:src="@drawable/ic_baseline_logout_24"
-                android:layout_gravity="center"
-                />
-        </androidx.cardview.widget.CardView>
-        <TextView
-            android:paddingLeft="10dp"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/logout"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:gravity="center_vertical"
-            />
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/ic_baseline_arrow_forward_ios_24"
-            android:layout_gravity="center"
-            />
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        app:title="@string/my_posts"
+        app:icon="@drawable/ic_baseline_format_list_bulleted_24"
+        app:iconBackground="@color/primary"
+        android:id="@+id/my_posts"
+        />
+    <com.example.myapplication.AccountOption
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/logout"
+        app:icon="@drawable/ic_baseline_logout_24"
+        app:iconBackground="@color/yellow_light"
+        android:id="@+id/logout2"
+        />
 
 </LinearLayout>
