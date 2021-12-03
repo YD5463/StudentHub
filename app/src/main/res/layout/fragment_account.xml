@@ -9,7 +9,46 @@
     android:paddingTop="40dp"
     tools:context=".my_profile.AccountFragment">
 
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:layout_marginBottom="10dp"
+        >
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_baseline_account_circle_24"
+            />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yosef Danan"
+                android:textSize="22sp"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="yosefdanan@gmail.com"
+                android:textSize="18sp"
+                android:textColor="#C0C0C0"
+                />
+        </LinearLayout>
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/ic_baseline_arrow_forward_ios_24"
+            android:layout_gravity="center"
+            />
+    </LinearLayout>
 <!--    <com.example.myapplication.AccountOption-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content"-->
