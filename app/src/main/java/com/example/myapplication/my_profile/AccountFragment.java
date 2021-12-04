@@ -1,5 +1,7 @@
 package com.example.myapplication.my_profile;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.example.myapplication.R;
+import com.example.myapplication.auth.MainActivity;
 import com.example.myapplication.database.UserData;
 import com.example.myapplication.databinding.FragmentAccountBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,6 +25,12 @@ public class AccountFragment extends Fragment{
     private AccountViewModel accountViewModel;
     private FragmentAccountBinding binding;
 
+    private void logout(){
+        Intent i = new Intent(getActivity(), MainActivity.class);
+        startActivity(i);
+        ((Activity) getActivity()).overridePendingTransition(0, 0);
+        FirebaseAuth.getInstance().signOut();
+    }
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentAccountBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -42,13 +51,11 @@ public class AccountFragment extends Fragment{
             }
         });
 
-//        Button logout = root.findViewById(R.id.logout);
-//        logout.setOnClickListener(l->{
-//            Intent i = new Intent(getActivity(), MainActivity.class);
-//            startActivity(i);
-//            ((Activity) getActivity()).overridePendingTransition(0, 0);
-//            FirebaseAuth.getInstance().signOut();
-//        });
+        AccountOption logout_option = root.findViewById(R.id.logout);
+        logout_option.setOnClickListener((v)->logout());
+        AccountOption my_posts_option = root.findViewById(R.id.my_posts);
+//        my_posts_option.setOnClickListener(); //TODO
+
         return root;
     }
 
