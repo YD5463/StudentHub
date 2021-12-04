@@ -4,8 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.mobsandgeeks.saripaar.ValidationError;
 
 import java.net.InetAddress;
+import java.util.List;
 
 public class Utils {
     public static void hideKeyboard(Activity activity) {
@@ -34,6 +39,18 @@ public class Utils {
             return !ipAddr.equals("");
         } catch (Exception e) {
             return false;
+        }
+    }
+    public static void onValidationFailed(List<ValidationError> errors,Context context){
+        for (ValidationError error : errors) {
+            View view = error.getView();
+            String message = error.getCollatedErrorMessage(context);
+            // Display error messages
+            if (view instanceof EditText) {
+                ((EditText) view).setError(message);
+            } else {
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

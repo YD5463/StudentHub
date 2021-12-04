@@ -16,15 +16,18 @@ import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapplication.utils.FormValidator;
 import com.example.myapplication.Home;
 import com.example.myapplication.R;
 import com.example.myapplication.database.UserData;
+import com.example.myapplication.utils.Utils;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.ConfirmPassword;
 import com.mobsandgeeks.saripaar.annotation.Email;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
@@ -32,9 +35,10 @@ import com.mobsandgeeks.saripaar.annotation.Password;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
 
 import java.io.IOException;
+import java.util.List;
 
 
-public class Signup extends FormValidator {
+public class Signup extends AppCompatActivity implements Validator.ValidationListener  {
     static private final String TAG = "Signup";
 
     private FirebaseAuth mAuth;
@@ -77,7 +81,9 @@ public class Signup extends FormValidator {
                 });
         init_variables();
         init_db();
-        signup_button.setOnClickListener(this::onSubmit);
+        Validator validator = new Validator(this);
+        validator.setValidationListener(this);
+        signup_button.setOnClickListener((v)->validator.validate());
         profile_image.setOnClickListener(this::onImagePick); //TODO: change default image look
     }
     private void onImagePick(View v){
@@ -157,5 +163,10 @@ public class Signup extends FormValidator {
                         mDialog.cancel();
                     }
                 });
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        Utils.onValidationFailed(errors,this);
     }
 }

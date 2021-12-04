@@ -24,6 +24,7 @@ public class AccountFragment extends Fragment{
     static final String TAG = "AccountFragment";
     private AccountViewModel accountViewModel;
     private FragmentAccountBinding binding;
+    private AccountOption manage_users_option;
 
     private void logout(){
         Intent i = new Intent(getActivity(), MainActivity.class);
@@ -46,11 +47,16 @@ public class AccountFragment extends Fragment{
                 UserData userData = task.getResult().getValue(UserData.class);
                 assert userData != null;
                 usernameView.setText(userData.fullname);
+                if(userData.isAdmin){
+                    manage_users_option.setVisibility(View.VISIBLE);
+                }
             }else{
                 Log.e(TAG,"Error getting user data");
             }
         });
 
+        manage_users_option = root.findViewById(R.id.manage_user);
+//        manage_users_option.setOnClickListener();
         AccountOption logout_option = root.findViewById(R.id.logout);
         logout_option.setOnClickListener((v)->logout());
         AccountOption my_posts_option = root.findViewById(R.id.my_posts);

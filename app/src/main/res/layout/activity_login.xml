@@ -52,14 +52,29 @@
             android:padding="10dp"
             />
 
-        <com.example.myapplication.CustomButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:btnColor="@color/primary"
-            app:btnTitle="@string/login"
+<!--        <com.example.myapplication.CustomButton-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:btnColor="@color/primary"-->
+<!--            app:btnTitle="@string/login"-->
+<!--            android:id="@+id/login_btn"-->
+<!--            android:clickable="true"-->
+<!--            android:focusable="true"-->
+<!--            />-->
+        <Button
             android:id="@+id/login_btn"
+            android:layout_width="match_parent"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/white"
+            android:layout_marginBottom="10dp"
+            android:bottomRightRadius="60dp"
+            android:bottomLeftRadius="60dp"
+            android:topLeftRadius="60dp"
+            android:topRightRadius="60dp"
             />
-
         <Button
             android:id="@+id/forgot_password"
             android:layout_width="wrap_content"
@@ -67,7 +82,7 @@
             android:layout_gravity="center_horizontal"
             style="?android:attr/borderlessButtonStyle"
             android:textSize="20sp"
-            android:text="Forgot password"
+            android:text="@string/forgot_password"
             android:textAllCaps="false"
             android:textAlignment="center"
             android:textColor="@color/black"

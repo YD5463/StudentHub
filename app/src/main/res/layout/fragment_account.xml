@@ -32,14 +32,13 @@
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Yosef Danan"
+                android:textColor="@color/black"
                 android:textSize="22sp"
                 />
             <TextView
                 android:id="@+id/user_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="yosefdanan@gmail.com"
                 android:textSize="18sp"
                 android:textColor="#C0C0C0"
                 />
@@ -63,11 +62,24 @@
     <com.example.myapplication.my_profile.AccountOption
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:title="Manage Users"
+        app:icon="@drawable/ic_baseline_lock_24"
+        app:iconBackground="@color/secondary"
+        android:id="@+id/manage_user"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        />
+
+    <com.example.myapplication.my_profile.AccountOption
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:title="@string/logout"
         app:icon="@drawable/ic_baseline_logout_24"
         app:iconBackground="@color/yellow_light"
         android:id="@+id/logout"
         android:clickable="true"
         android:focusable="true" />
+
 
 </LinearLayout>
