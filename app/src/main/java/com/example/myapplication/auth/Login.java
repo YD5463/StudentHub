@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.myapplication.CustomButton;
 import com.example.myapplication.utils.FormValidator;
 import com.example.myapplication.Home;
 import com.example.myapplication.R;
@@ -27,7 +28,8 @@ public class Login extends FormValidator{
     private EditText email;
     @Password(min=6)
     private EditText password;
-    private Button login_button, forgot_password_btn, register_instead_btn;
+    private Button forgot_password_btn, register_instead_btn;
+    private CustomButton login_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
