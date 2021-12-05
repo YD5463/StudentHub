@@ -14,11 +14,6 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.MyApplication" >
         <activity
-            android:name=".my_profile.EditProfile"
-            android:exported="false"
-            android:label="@string/title_activity_edit_profile"
-            android:theme="@style/Theme.MyApplication.NoActionBar" />
-        <activity
             android:name=".Home"
             android:exported="false"
             android:label="@string/title_activity_home" />
