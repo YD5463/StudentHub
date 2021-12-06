@@ -2,6 +2,8 @@ package com.example.myapplication.database;
 
 import android.annotation.SuppressLint;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -16,7 +18,7 @@ import java.util.Map;
 public class PostData {
     private String title;
     private String description;
-    private String userId;
+    private String uid;
     private int price;
     private int starCount = 0;
     private String creation_date;
@@ -25,7 +27,7 @@ public class PostData {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public PostData clone(){
-        return new PostData(title,description,price,userId,new ArrayList<>(images));
+        return new PostData(title,description,price, uid,new ArrayList<>(images));
     }
     public String getTitle() {
         return title;
@@ -43,12 +45,12 @@ public class PostData {
         this.description = description;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUid() {
+        return uid;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public int getPrice() {
@@ -82,14 +84,14 @@ public class PostData {
         this.title = title;
         this.description = description;
         this.price = price;
-        this.userId = userId;
+        this.uid = userId;
         this.images = images;
         creation_date = DATE_FORMAT.format(new Date());
     }
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("uid", userId);
+        result.put("uid", uid);
         result.put("title", title);
         result.put("price",price);
         result.put("description", description);
@@ -99,4 +101,8 @@ public class PostData {
         return result;
     }
 
+    @NonNull
+    public String toString(){
+        return "Title: "+title+"\n"+"Description: "+description+"\n"+"Price: "+price+"\n"+"UserId: "+ uid +"\n"+"Images: "+images+"\n"+"Creation date: "+creation_date;
+    }
 }
