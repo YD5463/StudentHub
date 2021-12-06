@@ -60,8 +60,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
 
     private void init_list(){
         post_adapter = new PostAdapter(filtered_list);
-        LinearLayoutManager mLayoutManager =
-                new LinearLayoutManager(getContext());
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recycler_view.setLayoutManager(mLayoutManager);
         recycler_view.setItemAnimator(new DefaultItemAnimator());
         recycler_view.setAdapter(post_adapter);

@@ -60,8 +60,13 @@ public class AccountFragment extends Fragment{
         AccountOption logout_option = root.findViewById(R.id.logout);
         logout_option.setOnClickListener((v)->logout());
         AccountOption my_posts_option = root.findViewById(R.id.my_posts);
-//        my_posts_option.setOnClickListener(); //TODO
-
+        my_posts_option.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MyPostsActivity.class);
+                startActivity(intent);
+            }
+        });
         return root;
     }
 
