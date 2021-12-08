@@ -38,7 +38,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,21 +48,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class NewPostFragment extends Fragment {
+public class NewPostFragment extends Fragment implements Validator.ValidationListener {
     static final private String TAG = "NewPostFragment";
     static final private int MAX_IMAGES = 3;
 
-    private NewPostViewModel newPostViewModel;
     private FragmentNewPostBinding binding;
 
     private int imagesCount = 0;
     private List<ImageView> images;
-    private List<String> imagesUris = new ArrayList<>();//Collections.synchronizedList(new ArrayList<String>());;
+    private List<String> imagesUris = new ArrayList<>();
+    @NotEmpty()
     private EditText title;
+    @NotEmpty()
     private EditText description;
+
     private EditText price;
     private LinearLayout linearLayout;
-    private Button addPostBtn;
     private ActivityResultLauncher<Intent> someActivityResultLauncher;
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -82,27 +85,6 @@ public class NewPostFragment extends Fragment {
         return imageView;
     }
 
-    private ProgressDialog createProgressDialog(){
-        ProgressDialog mDialog = new ProgressDialog(getContext());
-        mDialog.setMessage("Please wait...");
-        mDialog.setCancelable(true);
-        mDialog.show();
-        return mDialog;
-    }
-    private List<UploadTask> upload(){
-        List<UploadTask> tasks = new ArrayList<>();
-        for(int i=0;i<imagesCount;i++){
-            final StorageReference storageReference = FirebaseStorage.getInstance().
-                    getReference("posts-images/" + UUID.randomUUID().toString() + ".jpg");
-            storageReference.putBytes(FirebaseUtils.before_upload(images.get(i))).
-                    addOnSuccessListener(taskSnapshot -> storageReference.getDownloadUrl().addOnCompleteListener(task -> {
-                        imagesUris.add(task.getResult().toString());
-                    })).
-                    addOnFailureListener(e -> Log.e("FirebaseUtils","Image Uploading was failed:\n"+e.getMessage()));;
-
-        }
-        return tasks;
-    }
     private void onImagePick(View v){
         //TODO: check if image set
         final String TYPE = "image/*";
@@ -140,34 +122,9 @@ public class NewPostFragment extends Fragment {
             }
         });
     }
-    private void onSubmit(View v){
-        Context context = getContext();
-        ProgressDialog mDialog = createProgressDialog();
-        for(int i=0;i<imagesCount;i++){
-            Log.e(TAG,"Image count"+imagesCount);
-            final StorageReference storageReference = FirebaseStorage.getInstance().
-                    getReference("posts-images/" + UUID.randomUUID().toString() + ".jpg");
-                    storageReference.putBytes(FirebaseUtils.before_upload(images.get(i))).
-                    addOnSuccessListener(taskSnapshot -> storageReference.getDownloadUrl().addOnCompleteListener(upload_task -> {
-                        imagesUris.add(upload_task.getResult().toString());
-                        Log.d(TAG,upload_task.getResult().toString());
-                        if(imagesUris.size() == imagesCount){
-                            upload_post(mDialog,context,v);
-                        }
-                    })).
-                    addOnFailureListener(e -> {
-                        mDialog.cancel();
-                        Toast.makeText(context,"Failed to upload post",Toast.LENGTH_SHORT).show();
-                        Log.e("FirebaseUtils", "Image Uploading was failed:\n" + e.getMessage());
-                    });
-
-        }
-
-
-    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        newPostViewModel = new ViewModelProvider(this).get(NewPostViewModel.class);
+        NewPostViewModel newPostViewModel = new ViewModelProvider(this).get(NewPostViewModel.class);
         binding = FragmentNewPostBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         init(root);
@@ -197,12 +154,13 @@ public class NewPostFragment extends Fragment {
         description = root.findViewById(R.id.post_description);
         price = root.findViewById(R.id.post_price);
         linearLayout = root.findViewById(R.id.new_post_images);
-        addPostBtn = root.findViewById(R.id.add_post_btn);
+        Button addPostBtn = root.findViewById(R.id.add_post_btn);
 
         images = new ArrayList<>(MAX_IMAGES);
         imagesUris = new ArrayList<>(MAX_IMAGES);
         images.add(createDefaultImage());
-        addPostBtn.setOnClickListener(this::onSubmit);
+        Validator validator = new Validator(this);
+        addPostBtn.setOnClickListener(v -> validator.validate());
         someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 this::add_image);
@@ -223,5 +181,33 @@ public class NewPostFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onValidationSucceeded() {
+        Context context = getContext();
+        ProgressDialog mDialog = Utils.createProgressDialog(getContext());
+        for(int i=0;i<imagesCount;i++){
+            final StorageReference storageReference = FirebaseStorage.getInstance().
+                    getReference("posts-images/" + UUID.randomUUID().toString() + ".jpg");
+            storageReference.putBytes(FirebaseUtils.before_upload(images.get(i))).
+                    addOnSuccessListener(taskSnapshot -> storageReference.getDownloadUrl().addOnCompleteListener(upload_task -> {
+                        imagesUris.add(upload_task.getResult().toString());
+                        Log.d(TAG,upload_task.getResult().toString());
+                        if(imagesUris.size() == imagesCount){
+                            upload_post(mDialog,context,getView());
+                        }
+                    })).
+                    addOnFailureListener(e -> {
+                        mDialog.cancel();
+                        Toast.makeText(context,"Failed to upload post",Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "Image Uploading was failed:\n" + e.getMessage());
+                    });
+        }
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        Utils.onValidationFailed(errors,getContext());
     }
 }

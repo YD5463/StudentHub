@@ -1,6 +1,7 @@
 package com.example.myapplication.utils;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -52,5 +53,12 @@ public class Utils {
                 Toast.makeText(context, message, Toast.LENGTH_LONG).show();
             }
         }
+    }
+    public static ProgressDialog createProgressDialog(Context context){
+        ProgressDialog mDialog = new ProgressDialog(context);
+        mDialog.setMessage("Please wait...");
+        mDialog.setCancelable(true);
+        mDialog.show();
+        return mDialog;
     }
 }
