@@ -20,6 +20,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(String... urls) {
         String urldisplay = urls[0];
+        if(urldisplay == null)return null;
         Bitmap mIcon11 = null;
         try {
             InputStream in = new java.net.URL(urldisplay).openStream();
@@ -32,6 +33,6 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     }
     @Override
     protected void onPostExecute(Bitmap result) {
-        bmImage.setImageBitmap(result);
+        if(result != null) bmImage.setImageBitmap(result);
     }
 }

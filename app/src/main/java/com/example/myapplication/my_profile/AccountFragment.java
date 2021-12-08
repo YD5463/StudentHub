@@ -15,6 +15,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.auth.MainActivity;
 import com.example.myapplication.database.UserData;
 import com.example.myapplication.databinding.FragmentAccountBinding;
+import com.example.myapplication.utils.DownloadImageTask;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -50,6 +51,7 @@ public class AccountFragment extends Fragment{
                 if(userData.isAdmin){
                     manage_users_option.setVisibility(View.VISIBLE);
                 }
+                new DownloadImageTask(root.findViewById(R.id.profile_image_my_account)).execute(userData.profile_image_url);
             }else{
                 Log.e(TAG,"Error getting user data");
             }

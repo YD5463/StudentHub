@@ -18,6 +18,7 @@
         android:layout_marginBottom="10dp"
         >
         <ImageView
+            android:id="@+id/profile_image_my_account"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:src="@drawable/ic_baseline_account_circle_24"

@@ -44,6 +44,7 @@ public class PostDetails extends AppCompatActivity {
                     intent.setData(Uri.parse("tel:"+userData.phone_number));
                     startActivity(intent);
                 });
+                new DownloadImageTask(findViewById(R.id.seller_profile_image)).execute(userData.profile_image_url);
             }else{
                 Log.e(TAG,"Error getting user data");
             }
