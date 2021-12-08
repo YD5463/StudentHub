@@ -14,9 +14,12 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.MyApplication">
         <activity
-            android:name=".my_profile.MyPostsActivity"
-            android:label="My Posts"
+            android:name=".posts_list.PostDetails"
             android:exported="false" />
+        <activity
+            android:name=".my_profile.MyPostsActivity"
+            android:exported="false"
+            android:label="My Posts" />
         <activity
             android:name=".Home"
             android:exported="false"

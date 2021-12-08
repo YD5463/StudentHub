@@ -1,9 +1,9 @@
 package com.example.myapplication.posts_list;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +11,14 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.database.PostData;
+import com.example.myapplication.utils.DownloadImageTask;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
     private static final String TAG = "PostAdapter";
@@ -45,35 +43,33 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         this.postsList = postsList;
     }
 
+    @NonNull
     @Override
     public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.post, parent, false);
-
         return new PostViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(PostViewHolder holder, int position) {
-        PostData post = postsList.get(position);
-        holder.title.setText(post.getTitle());
-        holder.description.setText(post.getDescription());
-        holder.price.setText(String.valueOf(post.getPrice()));
-        holder.starCount.setRating(post.getStarCount());
-        List<String> images_urls = post.getImages();
+        PostData curr_post = postsList.get(position);
+        holder.title.setText(curr_post.getTitle());
+        holder.description.setText(curr_post.getDescription());
+        holder.price.setText(String.valueOf(curr_post.getPrice()));
+        holder.starCount.setRating(curr_post.getStarCount());
+        List<String> images_urls = curr_post.getImages();
         if(images_urls.size() != 0){
-            //TODO
-//            AsyncTask.execute(() -> {
-//                try{
-//                    URL url = new URL(images_urls.get(0));
-//                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-//                    holder.image.setImageBitmap(bmp);
-//                }catch (Exception e){
-//                    e.printStackTrace();
-//                    Log.e(TAG,"Error: "+e.getMessage());
-//                }
-//            });
+            new DownloadImageTask(holder.image)
+                    .execute(images_urls.get(0));
+
         }
+        holder.itemView.setOnClickListener(v -> {
+            Context context = v.getContext();
+            Intent intent = new Intent(context, PostDetails.class);
+            intent.putExtra("post_data",curr_post);
+            context.startActivity(intent);
+        });
     }
 
     @Override

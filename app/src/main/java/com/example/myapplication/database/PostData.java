@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @IgnoreExtraProperties
-public class PostData {
+public class PostData implements Serializable {
     private String title;
     private String description;
     private String uid;

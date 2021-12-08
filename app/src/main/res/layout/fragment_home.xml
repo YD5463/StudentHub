@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:backgroundTint="#CECECE"
-    tools:context=".posts_list.HomeFragment">
+    tools:context=".posts_list.HomeFragment"
+    android:layout_margin="25dp"
+    >
     <ProgressBar
         android:id="@+id/progress_bar_home"
         android:visibility="visible"
@@ -19,6 +21,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/posts"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        />
 
 </LinearLayout>
