@@ -11,12 +11,12 @@ public class UserData {
         FEMALE,
         DECLINE_TO_ANSWER
     }
-    public String fullname,email,profile_image_url;
+    public String fullname, email, profile_image_url;
     public Gender gender;
     public boolean isAdmin;
     public String phone_number;
-    public UserData(){
-    }
+
+    public UserData(){}
 
     public UserData(String fullname, String email, Gender gender,String profile_image_url,String phone_number) {
         this.fullname = fullname;
@@ -26,6 +26,51 @@ public class UserData {
         this.isAdmin = false;
         this.phone_number = phone_number;
     }
+
+    public String getName() {
+        return fullname;
+    }
+
+    public void setName(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getProfile_image_url() {
+        return profile_image_url;
+    }
+
+    public void setProfile_image_url(String profile_image_url) {
+        this.profile_image_url = profile_image_url;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public String getUserType() {
+        return isAdmin? "Admin": "Regular User";
+    }
+
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
+    }
+
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
