@@ -159,6 +159,7 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
         imagesUris = new ArrayList<>(MAX_IMAGES);
         images.add(createDefaultImage());
         Validator validator = new Validator(this);
+        validator.setValidationListener(this);
         addPostBtn.setOnClickListener(v -> validator.validate());
         someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
