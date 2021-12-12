@@ -64,7 +64,7 @@
             android:id="@+id/post_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
+            android:inputType="number"
             android:textSize="20sp"
             android:layout_marginBottom="20dp"
             android:padding="10dp"

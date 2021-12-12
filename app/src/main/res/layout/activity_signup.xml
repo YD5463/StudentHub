@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".auth.Signup"
     android:orientation="vertical"
-    android:backgroundTint="#CECECE"
+    android:backgroundTint="@color/light_gray"
     android:paddingTop="50dp"
     android:paddingLeft="25dp"
     android:paddingRight="25dp"

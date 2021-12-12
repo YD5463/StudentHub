@@ -24,6 +24,7 @@ public class PostData implements Serializable {
     private int starCount = 0;
     private String creation_date;
     private List<String> images = new ArrayList<>();
+//    private PostCatergory catergory;
     @SuppressLint("SimpleDateFormat")
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 

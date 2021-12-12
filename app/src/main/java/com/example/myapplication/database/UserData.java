@@ -30,7 +30,7 @@ public class UserData {
     }
 
     public String getName() {
-        return fullname;
+        return fullname!=null ? fullname : "";
     }
 
     public void setName(String fullname) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Student Hub</string>
     <string name="sub_title">Sell What You Don\'t Need</string>
 
     <!--Login \ SignUp Activities-->
@@ -60,4 +60,5 @@
     <string name="phone_icon_desc">phone icon</string>
     <string name="delete_post">Delete Post</string>
     <string name="Price">Price</string>
+    <string name="logo_text">Every Student Loves\n\t\t\t\t\t\t\tTo Shop</string>
 </resources>

@@ -60,7 +60,8 @@ public class PostDetails extends AppCompatActivity {
         database.child("UserData/"+postData.getUid()).get().addOnCompleteListener((task)->{
             if(task.isSuccessful()){
                 UserData userData = task.getResult().getValue(UserData.class);
-                seller_name.setText(userData.fullname);
+                if(userData==null)return;
+                seller_name.setText(userData.getName());
                 phone_icon.setOnClickListener(l->{
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse("tel:"+userData.phone_number));

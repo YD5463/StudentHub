@@ -29,16 +29,20 @@
             android:label="@string/title_activity_home" />
         <activity
             android:name=".auth.Signup"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".auth.Login"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".auth.ForgotPassword"
             android:exported="false" />
         <activity
             android:name=".auth.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
