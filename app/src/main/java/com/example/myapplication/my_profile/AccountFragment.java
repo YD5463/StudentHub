@@ -23,14 +23,13 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class AccountFragment extends Fragment{
     static final String TAG = "AccountFragment";
-    private AccountViewModel accountViewModel;
     private FragmentAccountBinding binding;
     private AccountOption manage_users_option;
 
     private void logout(){
         Intent i = new Intent(getActivity(), MainActivity.class);
         startActivity(i);
-        ((Activity) getActivity()).overridePendingTransition(0, 0);
+        (getActivity()).overridePendingTransition(0, 0);
         FirebaseAuth.getInstance().signOut();
     }
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,8 +37,8 @@ public class AccountFragment extends Fragment{
         View root = binding.getRoot();
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
-        TextView usernameView = (TextView)root.findViewById(R.id.user_name);
-        TextView emailView = (TextView) root.findViewById(R.id.user_email);
+        TextView usernameView = root.findViewById(R.id.user_name);
+        TextView emailView = root.findViewById(R.id.user_email);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user != null;
         emailView.setText(user.getEmail());
@@ -62,12 +61,9 @@ public class AccountFragment extends Fragment{
         AccountOption logout_option = root.findViewById(R.id.logout);
         logout_option.setOnClickListener((v)->logout());
         AccountOption my_posts_option = root.findViewById(R.id.my_posts);
-        my_posts_option.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MyPostsActivity.class);
-                startActivity(intent);
-            }
+        my_posts_option.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), MyPostsActivity.class);
+            startActivity(intent);
         });
         return root;
     }

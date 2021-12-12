@@ -124,7 +124,6 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        NewPostViewModel newPostViewModel = new ViewModelProvider(this).get(NewPostViewModel.class);
         binding = FragmentNewPostBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         init(root);

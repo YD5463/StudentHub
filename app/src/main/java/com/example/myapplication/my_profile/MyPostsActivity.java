@@ -38,7 +38,6 @@ public class MyPostsActivity extends AppCompatActivity {
         current_user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         recyclerView = findViewById(R.id.my_posts_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         post_adapter = new PostAdapter(filtered_list);
         recyclerView.setAdapter(post_adapter);
         fetchAllPosts();
@@ -60,11 +59,8 @@ public class MyPostsActivity extends AppCompatActivity {
                     runOnUiThread(()->post_adapter.notifyDataSetChanged());
                 }
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 }
