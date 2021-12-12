@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.example.myapplication.R;
+import com.example.myapplication.admin.ManageUsers;
 import com.example.myapplication.auth.MainActivity;
 import com.example.myapplication.database.UserData;
 import com.example.myapplication.databinding.FragmentAccountBinding;
@@ -57,7 +58,10 @@ public class AccountFragment extends Fragment{
         });
 
         manage_users_option = root.findViewById(R.id.manage_user);
-//        manage_users_option.setOnClickListener();
+        manage_users_option.setOnClickListener(v -> {
+            Intent i = new Intent(getActivity(), ManageUsers.class);
+            startActivity(i);
+        });
         AccountOption logout_option = root.findViewById(R.id.logout);
         logout_option.setOnClickListener((v)->logout());
         AccountOption my_posts_option = root.findViewById(R.id.my_posts);
