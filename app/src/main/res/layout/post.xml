@@ -23,15 +23,15 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:src="@drawable/ic_baseline_image_24"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:padding="4dp"
-                android:contentDescription="@string/post_image"
                 android:layout_marginBottom="10dp"
                 android:adjustViewBounds="true"
+                android:contentDescription="@string/post_image"
+                android:padding="4dp"
                 android:scaleType="fitXY"
-                />
+                android:src="@drawable/ic_baseline_image_24" />
+
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
