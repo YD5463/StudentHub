@@ -15,16 +15,18 @@ public class UserData {
     public Gender gender;
     public boolean isAdmin;
     public String phone_number;
+    public String uid;
 
     public UserData(){}
 
-    public UserData(String fullname, String email, Gender gender,String profile_image_url,String phone_number) {
+    public UserData(String fullname, String email, Gender gender,String profile_image_url,String phone_number, String uid) {
         this.fullname = fullname;
         this.email = email;
         this.gender = gender;
         this.profile_image_url = profile_image_url;
         this.isAdmin = false;
         this.phone_number = phone_number;
+        this.uid = uid;
     }
 
     public String getName() {
@@ -69,6 +71,14 @@ public class UserData {
 
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     @Exclude

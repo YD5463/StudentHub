@@ -123,7 +123,7 @@ public class Signup extends AppCompatActivity implements Validator.ValidationLis
     }
     private UserData create_user(String image_url){
         UserData.Gender genderVal = UserData.Gender.MALE; //TODO: input this as well
-        return new UserData(fullname.getText().toString(), email.getText().toString(),genderVal,image_url,phone_number.getText().toString());
+        return new UserData(fullname.getText().toString(), email.getText().toString(),genderVal,image_url,phone_number.getText().toString(), FirebaseAuth.getInstance().getCurrentUser().getUid());
     }
 
     private void edit_user(String image_url,ProgressDialog mDialog){
