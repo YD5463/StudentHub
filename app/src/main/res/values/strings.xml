@@ -58,4 +58,5 @@
     <string name="icon_option">icon option</string>
     <string name="go_to_icon">go to icon</string>
     <string name="phone_icon_desc">phone icon</string>
+    <string name="delete_post">Delete Post</string>
 </resources>

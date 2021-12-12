@@ -124,7 +124,6 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        NewPostViewModel newPostViewModel = new ViewModelProvider(this).get(NewPostViewModel.class);
         binding = FragmentNewPostBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         init(root);
@@ -160,6 +159,7 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
         imagesUris = new ArrayList<>(MAX_IMAGES);
         images.add(createDefaultImage());
         Validator validator = new Validator(this);
+        validator.setValidationListener(this);
         addPostBtn.setOnClickListener(v -> validator.validate());
         someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
