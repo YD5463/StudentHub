@@ -79,6 +79,10 @@ public class PostData implements Serializable {
         this.images = images;
     }
 
+    public String getCreation_date() {
+        return creation_date;
+    }
+
     public PostData(){
 
     }

@@ -50,11 +50,13 @@ public class PostDetails extends AppCompatActivity {
         TextView seller_rate = findViewById(R.id.seller_rate);
         ImageView phone_icon = findViewById(R.id.call_seller_icon);
         TextView description = findViewById(R.id.description);
+        TextView postDate = findViewById(R.id.uploadDate);
         TextView price = findViewById(R.id.price);
         Button delete_post_button = (Button)findViewById(R.id.delete_post_btn);
         description.setText(postData.getDescription());
         price.setText(postData.getPrice()+"");
         title.setText(postData.getTitle());
+        postDate.setText("Posted: "+postData.getCreation_date());
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         database.child("UserData/"+postData.getUid()).get().addOnCompleteListener((task)->{

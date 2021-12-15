@@ -27,6 +27,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.myapplication.Home;
+import com.example.myapplication.posts_list.PostDetails;
 import com.example.myapplication.utils.FirebaseUtils;
 import com.example.myapplication.R;
 import com.example.myapplication.utils.Utils;
@@ -116,6 +118,8 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
                 Utils.hideKeyboardFrom(context,v);
                 Toast.makeText(context, "Post Added Successfully.",
                         Toast.LENGTH_SHORT).show();
+                startActivity( new Intent(getActivity(), Home.class));
+
             }else{
                 Toast.makeText(context, "Add Post Failed.",
                         Toast.LENGTH_SHORT).show();
