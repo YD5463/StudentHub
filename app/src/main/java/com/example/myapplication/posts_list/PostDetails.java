@@ -28,8 +28,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 
 public class PostDetails extends AppCompatActivity {
     static final String TAG = "PostDetails";
@@ -61,7 +59,6 @@ public class PostDetails extends AppCompatActivity {
         postDate.setText("Posted: "+postData.getCreation_date());
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-        Log.d("TAG", "THIS USER IS ADMIN: " + isCurrentUserAdmin);
         database.child("UserData/"+firebaseUser.getUid()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 UserData userData = task.getResult().getValue(UserData.class);
@@ -71,7 +68,6 @@ public class PostDetails extends AppCompatActivity {
                 }
             }
         });
-        Log.d("TAG", "THIS USER IS ADMIN: " + isCurrentUserAdmin);
         database.child("UserData/"+postData.getUid()).get().addOnCompleteListener((task)->{
             if(task.isSuccessful()){
                 UserData userData = task.getResult().getValue(UserData.class);
