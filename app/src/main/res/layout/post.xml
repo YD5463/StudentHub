@@ -28,8 +28,9 @@
                 android:layout_marginBottom="10dp"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/post_image"
+                android:scaleType="fitCenter"
+                android:background="@color/design_default_color_surface"
                 android:padding="4dp"
-                android:scaleType="fitXY"
                 android:src="@drawable/ic_baseline_image_24" />
 
             <GridLayout
