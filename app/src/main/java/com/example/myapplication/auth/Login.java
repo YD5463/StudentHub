@@ -70,10 +70,7 @@ public class Login extends AppCompatActivity implements Validator.ValidationList
     public void onValidationSucceeded() {
         String emailVal = email.getText().toString();
         String passwordVal = password.getText().toString();
-        ProgressDialog mDialog = new ProgressDialog(Login.this);
-        mDialog.setMessage(Login.this.getString(R.string.please_wait));
-        mDialog.setCancelable(true);
-        mDialog.show();
+        ProgressDialog mDialog = Utils.createProgressDialog(Login.this);
         mAuth.signInWithEmailAndPassword(emailVal, passwordVal)
                 .addOnCompleteListener(this, task -> {
                     mDialog.cancel();
@@ -82,7 +79,6 @@ public class Login extends AppCompatActivity implements Validator.ValidationList
                         FirebaseUser user = mAuth.getCurrentUser();
                         startActivity( new Intent(Login.this, Home.class));
                     } else {
-//                      String cause = Objects.requireNonNull(task.getException()).getMessage();
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
                         Toast.makeText(Login.this, "Login Failed!", Toast.LENGTH_SHORT).show();
                     }

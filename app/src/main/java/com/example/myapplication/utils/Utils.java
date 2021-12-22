@@ -3,13 +3,19 @@ package com.example.myapplication.utils;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mobsandgeeks.saripaar.ValidationError;
 
+import java.io.ByteArrayOutputStream;
 import java.net.InetAddress;
 import java.util.List;
 
@@ -60,5 +66,30 @@ public class Utils {
         mDialog.setCancelable(true);
         mDialog.show();
         return mDialog;
+    }
+    public static Intent createImageChooserIntent(){
+        final String TYPE = "image/*";
+        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        getIntent.setType(TYPE);
+        Intent pickIntent = new Intent(Intent.ACTION_PICK);
+        pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,TYPE);
+        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+        return chooserIntent;
+    }
+
+    public static Bitmap imageViewToBitmap(ImageView image){
+        Drawable drawable = image.getDrawable();
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+    public static byte[] before_upload(ImageView image){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Bitmap bitmap = imageViewToBitmap(image);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        return baos.toByteArray();
     }
 }
