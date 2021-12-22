@@ -2,7 +2,6 @@ package com.example.myapplication.database;
 
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,12 +16,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
-import java.util.function.Function;
+
 
 public class FirebaseDatabaseHandler {
     private static final String TAG = "FirebaseDatabaseHandler";
