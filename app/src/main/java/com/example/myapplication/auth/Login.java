@@ -1,6 +1,5 @@
 package com.example.myapplication.auth;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,9 +12,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapplication.CustomButton;
 import com.example.myapplication.Home;
 import com.example.myapplication.R;
+import com.example.myapplication.database.DatabaseHandler;
 import com.example.myapplication.utils.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -71,18 +70,13 @@ public class Login extends AppCompatActivity implements Validator.ValidationList
         String emailVal = email.getText().toString();
         String passwordVal = password.getText().toString();
         ProgressDialog mDialog = Utils.createProgressDialog(Login.this);
-        mAuth.signInWithEmailAndPassword(emailVal, passwordVal)
-                .addOnCompleteListener(this, task -> {
-                    mDialog.cancel();
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "signInWithEmail:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        startActivity( new Intent(Login.this, Home.class));
-                    } else {
-                        Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        Toast.makeText(Login.this, "Login Failed!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        DatabaseHandler.login(emailVal,passwordVal,()->{
+            mDialog.cancel();
+            startActivity( new Intent(Login.this, Home.class));
+        },(error)->{
+            Toast.makeText(Login.this, "Login Failed!", Toast.LENGTH_SHORT).show();
+            mDialog.cancel();
+        });
     }
 
     @Override

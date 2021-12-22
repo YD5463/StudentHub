@@ -22,15 +22,15 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 
-public class FirebaseDatabaseHandler {
+public class FirebaseDatabaseHandler{
     private static final String TAG = "FirebaseDatabaseHandler";
     private static final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
     private static final FirebaseAuth mAuth = FirebaseAuth.getInstance();;
     private static final String POSTS_TABLE = "posts";
     private static final String USERS_TABLE = "UserData";
-    private static final String POSTS_IMAGES = "posts-images";
+    public static final String POSTS_IMAGES = "posts-images";
     private static final String IMAGE_EXTENSION = ".jpg";
-    private static final String PROFILE_IMAGES = "profile-images";
+    public static final String PROFILE_IMAGES = "profile-images";
 
     static private void callOnFailed(@Nullable Runnable onFailed){
         if(onFailed != null){
@@ -89,7 +89,7 @@ public class FirebaseDatabaseHandler {
             }
         });
     }
-    public static void uploadImages(List<ImageView> images,final int imagesCount,Runnable onFailed,Consumer<List<String>> onFinishUpload,String location,String imageExtension){
+    private static void uploadImages(List<ImageView> images,final int imagesCount,Runnable onFailed,Consumer<List<String>> onFinishUpload,String location,String imageExtension){
         List<String> imagesUris = new ArrayList<>();
         for(int i=0;i<imagesCount;i++){
             final StorageReference storageReference = FirebaseStorage.getInstance().

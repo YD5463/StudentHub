@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplication.Home;
+import com.example.myapplication.database.DatabaseHandler;
 import com.example.myapplication.posts_list.PostDetails;
 import com.example.myapplication.utils.FirebaseUtils;
 import com.example.myapplication.R;
@@ -58,7 +59,6 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
 
     private int imagesCount = 0;
     private List<ImageView> images;
-    private List<String> imagesUris = new ArrayList<>();
     @NotEmpty()
     private EditText title;
     @NotEmpty()
@@ -88,15 +88,7 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
     }
 
     private void onImagePick(View v){
-        //TODO: check if image set
-        final String TYPE = "image/*";
-        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getIntent.setType(TYPE);
-        Intent pickIntent = new Intent(Intent.ACTION_PICK);
-        pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,TYPE);
-        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
-        someActivityResultLauncher.launch(chooserIntent);
+        someActivityResultLauncher.launch(Utils.createImageChooserIntent());
     }
 
     private int getPrice(){
@@ -104,26 +96,18 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
         return !priceStr.isEmpty() ? Integer.parseInt(price.getText().toString()) : 0;
     }
 
-    private void upload_post(ProgressDialog mDialog,Context context,View v){
+    private void upload_post(ProgressDialog mDialog,Context context,View v,List<String> imagesUris){
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         String key = mDatabase.child("products").push().getKey();
-        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String user_id =  FirebaseAuth.getInstance().getCurrentUser().getUid();
         PostData post = new PostData(title.getText().toString(),description.getText().toString(), getPrice(),user_id,imagesUris);
-        Map<String, Object> postValues = post.toMap();
-        Task<?> addToDBTask = mDatabase.child("/posts/" + key).updateChildren(postValues);
-        addToDBTask.addOnCompleteListener(task->{
-            mDialog.cancel();
-            if(task.isSuccessful()){
-                cleanForm();
-                Utils.hideKeyboardFrom(context,v);
-                Toast.makeText(context, "Post Added Successfully.",
-                        Toast.LENGTH_SHORT).show();
-                startActivity( new Intent(getActivity(), Home.class));
-
-            }else{
-                Toast.makeText(context, "Add Post Failed.",
-                        Toast.LENGTH_SHORT).show();
-            }
+        DatabaseHandler.addPost(post,()->{
+            cleanForm();
+            Utils.hideKeyboardFrom(context,v);
+            Toast.makeText(context, "Post Added Successfully.",Toast.LENGTH_SHORT).show();
+            startActivity( new Intent(getActivity(), Home.class));
+        },()->{
+            Toast.makeText(context, "Add Post Failed.",Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -135,22 +119,13 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
     }
 
     private void add_image(ActivityResult result){
-        //TODO: extract to some utils class
-        if (result.getResultCode() == Activity.RESULT_OK) {
-            Intent data = result.getData();
-            assert data != null;
-            Uri imageUri = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUri);
-                images.get(images.size()-1).setImageBitmap(bitmap);
-                imagesCount++;
-                if(images.size()<MAX_IMAGES){
-                    images.add(createDefaultImage());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+        Utils.image_picker_handler(result,getContext(),(bitmap -> {
+            images.get(images.size()-1).setImageBitmap(bitmap);
+            imagesCount++;
+            if(images.size()<MAX_IMAGES){
+                images.add(createDefaultImage());
             }
-        }
+        }));
     }
     private void init(View root){
         title = root.findViewById(R.id.post_title);
@@ -160,7 +135,6 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
         Button addPostBtn = root.findViewById(R.id.add_post_btn);
 
         images = new ArrayList<>(MAX_IMAGES);
-        imagesUris = new ArrayList<>(MAX_IMAGES);
         images.add(createDefaultImage());
         Validator validator = new Validator(this);
         validator.setValidationListener(this);
@@ -191,23 +165,13 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
     public void onValidationSucceeded() {
         Context context = getContext();
         ProgressDialog mDialog = Utils.createProgressDialog(getContext());
-        for(int i=0;i<imagesCount;i++){
-            final StorageReference storageReference = FirebaseStorage.getInstance().
-                    getReference("posts-images/" + UUID.randomUUID().toString() + ".jpg");
-            storageReference.putBytes(FirebaseUtils.before_upload(images.get(i))).
-                    addOnSuccessListener(taskSnapshot -> storageReference.getDownloadUrl().addOnCompleteListener(upload_task -> {
-                        imagesUris.add(upload_task.getResult().toString());
-                        Log.d(TAG,upload_task.getResult().toString());
-                        if(imagesUris.size() == imagesCount){
-                            upload_post(mDialog,context,getView());
-                        }
-                    })).
-                    addOnFailureListener(e -> {
-                        mDialog.cancel();
-                        Toast.makeText(context,"Failed to upload post",Toast.LENGTH_SHORT).show();
-                        Log.e(TAG, "Image Uploading was failed:\n" + e.getMessage());
-                    });
-        }
+        DatabaseHandler.uploadPostImages(images,imagesCount,()->{
+            mDialog.cancel();
+            Toast.makeText(context,"Failed to upload post",Toast.LENGTH_SHORT).show();
+        },(imageUris)->{
+            mDialog.cancel();
+            upload_post(mDialog,context,getView(),imageUris);
+        });
     }
 
     @Override

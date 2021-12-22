@@ -1,12 +1,8 @@
 package com.example.myapplication.auth;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -22,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplication.Home;
 import com.example.myapplication.R;
+import com.example.myapplication.database.DatabaseHandler;
 import com.example.myapplication.database.UserData;
 import com.example.myapplication.utils.Utils;
 import com.google.android.gms.tasks.Task;
@@ -36,7 +33,6 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Password;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
 
-import java.io.IOException;
 import java.util.List;
 
 
@@ -70,20 +66,10 @@ public class Signup extends AppCompatActivity implements Validator.ValidationLis
 
         someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent data = result.getData();
-                        assert data != null;
-                        Uri imageUri = data.getData();
-                        try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                            profile_image.setImageBitmap(bitmap);
-                            is_profile_image_default = false;
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+                result -> Utils.image_picker_handler(result,getApplicationContext(),(bitmap)->{
+                    profile_image.setImageBitmap(bitmap);
+                    is_profile_image_default = false;
+                }));
         init_variables();
         init_db();
         Validator validator = new Validator(this);
@@ -92,18 +78,7 @@ public class Signup extends AppCompatActivity implements Validator.ValidationLis
         profile_image.setOnClickListener(this::onImagePick); //TODO: change default image look
     }
     private void onImagePick(View v){
-        //TODO: check if image set
-        final String TYPE = "image/*";
-        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getIntent.setType(TYPE);
-
-        Intent pickIntent = new Intent(Intent.ACTION_PICK);
-        pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,TYPE);
-
-        Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
-
-        someActivityResultLauncher.launch(chooserIntent);
+        someActivityResultLauncher.launch(Utils.createImageChooserIntent());
     }
     private void init_db(){
         mAuth = FirebaseAuth.getInstance();
@@ -151,23 +126,17 @@ public class Signup extends AppCompatActivity implements Validator.ValidationLis
         ProgressDialog mDialog = createProgressDialog();
         Task<?> createUserTask = mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString());
         createUserTask.addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        if(!is_profile_image_default){
-                            edit_user("",mDialog);
-//                            Task<UploadTask.TaskSnapshot> uploadImageTask = FirebaseUtils.uploadImage(profile_image,UUID.randomUUID().toString());
-//                            uploadImageTask.addOnCompleteListener(t2->{
-//                                if(t2.isSuccessful()) {
-//                                    edit_user(t2.getResult().getUploadSessionUri().toString(),mDialog);
-//                                }//TODO: handle failed to upload
-//                            });
-                        }else{
-                            edit_user("",mDialog);
-                        }
-                    } else {
-                        Toast.makeText(Signup.this, "Check Email id or Password", Toast.LENGTH_SHORT).show();
-                        mDialog.cancel();
-                    }
-                });
+            if (task.isSuccessful()) {
+                if(!is_profile_image_default){
+                    DatabaseHandler.uploadProfileImage(profile_image, mDialog::cancel,(url)-> edit_user(url,mDialog));
+                }else{
+                    edit_user("",mDialog);
+                }
+            } else {
+                Toast.makeText(Signup.this, "Check Email id or Password", Toast.LENGTH_SHORT).show();
+                mDialog.cancel();
+            }
+        });
     }
 
     @Override

@@ -7,17 +7,23 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+
 import com.mobsandgeeks.saripaar.ValidationError;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Utils {
     public static void hideKeyboard(Activity activity) {
@@ -91,5 +97,19 @@ public class Utils {
         Bitmap bitmap = imageViewToBitmap(image);
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         return baos.toByteArray();
+    }
+
+    public static void image_picker_handler(ActivityResult result,Context context,Consumer<Bitmap> handler){
+        if (result.getResultCode() == Activity.RESULT_OK) {
+            Intent data = result.getData();
+            assert data != null;
+            Uri imageUri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), imageUri);
+                handler.accept(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
