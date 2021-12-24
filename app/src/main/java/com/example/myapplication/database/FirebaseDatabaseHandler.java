@@ -91,6 +91,7 @@ public class FirebaseDatabaseHandler{
     }
     private static void uploadImages(List<ImageView> images,final int imagesCount,Runnable onFailed,Consumer<List<String>> onFinishUpload,String location,String imageExtension){
         List<String> imagesUris = new ArrayList<>();
+        if(imagesCount == 0)onFinishUpload.accept(imagesUris);
         for(int i=0;i<imagesCount;i++){
             final StorageReference storageReference = FirebaseStorage.getInstance().
                     getReference(location+"/" + UUID.randomUUID().toString() + imageExtension);
