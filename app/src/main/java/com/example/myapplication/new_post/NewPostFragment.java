@@ -97,17 +97,17 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
     }
 
     private void upload_post(ProgressDialog mDialog,Context context,View v,List<String> imagesUris){
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        String key = mDatabase.child("products").push().getKey();
         String user_id =  FirebaseAuth.getInstance().getCurrentUser().getUid();
         PostData post = new PostData(title.getText().toString(),description.getText().toString(), getPrice(),user_id,imagesUris);
         DatabaseHandler.addPost(post,()->{
+            mDialog.cancel();
             cleanForm();
             Utils.hideKeyboardFrom(context,v);
             Toast.makeText(context, "Post Added Successfully.",Toast.LENGTH_SHORT).show();
             startActivity( new Intent(getActivity(), Home.class));
         },()->{
             Toast.makeText(context, "Add Post Failed.",Toast.LENGTH_SHORT).show();
+            mDialog.cancel();
         });
     }
 
@@ -169,7 +169,6 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
             mDialog.cancel();
             Toast.makeText(context,"Failed to upload post",Toast.LENGTH_SHORT).show();
         },(imageUris)->{
-            mDialog.cancel();
             upload_post(mDialog,context,getView(),imageUris);
         });
     }
