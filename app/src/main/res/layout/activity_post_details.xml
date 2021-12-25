@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:id="@+id/post_details_main_layout"
         >
     <ImageView
         android:id="@+id/post_image"
@@ -126,14 +127,11 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
-        <fragment
-            tools:layout="@layout/fragment_map_view"
-            android:layout_height="200dp"
-            android:layout_width="match_parent"
-            android:id="@+id/mapView"
-            class="com.example.myapplication.MapViewFragment"
-            />
 
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
         <Button
             android:id="@+id/delete_post_btn"
             android:layout_width="match_parent"

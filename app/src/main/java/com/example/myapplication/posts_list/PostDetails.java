@@ -3,8 +3,7 @@ package com.example.myapplication.posts_list;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.myapplication.Home;
@@ -17,9 +16,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -43,19 +39,36 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 public class PostDetails extends FragmentActivity {
     static final String TAG = "PostDetails";
-    private ProgressDialog progressDialog;
     private boolean isCurrentUserAdmin = false;
+    MapView mMapView;
+    private GoogleMap googleMap;
 
+    private void setMarker(GPSCoordinates location){
+        LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
+        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_details);
+        mMapView = findViewById(R.id.mapView);
+        mMapView.onCreate(savedInstanceState);
+        mMapView.onResume();
+
+        try {
+            MapsInitializer.initialize(getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         init();
         setTitle("Post Details");
     }
@@ -117,11 +130,18 @@ public class PostDetails extends FragmentActivity {
         });
     }
 
+
     @SuppressLint("SetTextI18n")
     private void init(){
         PostData postData = (PostData) getIntent().getSerializableExtra("post_data");
+        GPSCoordinates location = postData.getSeller_location();
+        if(location == null)location = new GPSCoordinates(32.085300, 34.781769);
+        final GPSCoordinates finalLocation = location;
+        mMapView.getMapAsync(mMap -> {
+            googleMap = mMap;
+            setMarker(finalLocation);
+        });
         TextView title = findViewById(R.id.title_post_detail);
-//        TextView seller_rate = findViewById(R.id.seller_rate);
         TextView description = findViewById(R.id.description);
         TextView postDate = findViewById(R.id.uploadDate);
         TextView price = findViewById(R.id.price);
@@ -130,7 +150,7 @@ public class PostDetails extends FragmentActivity {
         title.setText(postData.getTitle());
         postDate.setText("Posted: "+postData.getCreation_date());
         fetch_additional_data(postData.getUid(),postData.getCreation_date());
-        if(postData.getImages().size() > 0){
+        if(postData.getImages()!=null && postData.getImages().size() > 0){
             new DownloadImageTask(findViewById(R.id.post_image))
                     .execute(postData.getImages().get(0));
         }

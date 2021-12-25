@@ -1,6 +1,7 @@
 package com.example.myapplication.new_post;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -94,21 +95,32 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
         String priceStr = price.getText().toString();
         return !priceStr.isEmpty() ? Integer.parseInt(price.getText().toString()) : 0;
     }
-
+    private void askLocationPermission(Runnable onGranted){
+        registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if (isGranted) {
+                registerForActivityResult(new ActivityResultContracts.RequestPermission(),(isGranted2)->{
+                    if(isGranted2){
+                        onGranted.run();
+                    }
+                }).launch(Manifest.permission.ACCESS_COARSE_LOCATION);
+            }
+        }).launch(Manifest.permission.ACCESS_FINE_LOCATION);
+    }
     private void upload_post(ProgressDialog mDialog,Context context,View v,List<String> imagesUris){
         String user_id =  FirebaseAuth.getInstance().getCurrentUser().getUid();
-        PostData post = new PostData(title.getText().toString(),description.getText().toString(),
-                getPrice(),user_id,imagesUris,Utils.getCurrLocation(getContext()));
-        Log.d(TAG,post.toString());
-        DatabaseHandler.addPost(post,()->{
-            mDialog.cancel();
-            cleanForm();
-            Utils.hideKeyboardFrom(context,v);
-            Toast.makeText(context, "Post Added Successfully.",Toast.LENGTH_SHORT).show();
-            startActivity( new Intent(getActivity(), Home.class));
-        },()->{
-            Toast.makeText(context, "Add Post Failed.",Toast.LENGTH_SHORT).show();
-            mDialog.cancel();
+        Utils.getCurrLocation(getContext(), this::askLocationPermission,(location)->{
+            PostData post = new PostData(title.getText().toString(),description.getText().toString(),
+                    getPrice(),user_id,imagesUris,location);
+            DatabaseHandler.addPost(post,()->{
+                mDialog.cancel();
+                cleanForm();
+                Utils.hideKeyboardFrom(context,v);
+                Toast.makeText(context, "Post Added Successfully.",Toast.LENGTH_SHORT).show();
+                startActivity( new Intent(getActivity(), Home.class));
+            },()->{
+                Toast.makeText(context, "Add Post Failed.",Toast.LENGTH_SHORT).show();
+                mDialog.cancel();
+            });
         });
     }
 

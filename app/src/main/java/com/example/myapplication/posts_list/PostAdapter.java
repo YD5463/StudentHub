@@ -61,7 +61,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.price.setText(String.valueOf(curr_post.getPrice()));
         holder.starCount.setRating(curr_post.getStarCount());
         List<String> images_urls = curr_post.getImages();
-        if(images_urls.size() != 0){
+        if(images_urls!= null && images_urls.size() != 0){
             new DownloadImageTask(holder.image)
                     .execute(images_urls.get(0));
 

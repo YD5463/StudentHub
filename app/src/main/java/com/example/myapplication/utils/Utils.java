@@ -17,6 +17,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -24,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import com.example.myapplication.database.GPSCoordinates;
 import com.mobsandgeeks.saripaar.ValidationError;
@@ -130,18 +133,25 @@ public class Utils {
         builder.setMessage(question).setPositiveButton(android.R.string.yes, dialogClickListener)
                 .setNegativeButton(android.R.string.no, dialogClickListener).show();
     }
-    public static GPSCoordinates getCurrLocation(final Context context) {
+    private static GPSCoordinates getLocationHelper(Context context){
         LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return new GPSCoordinates(0,0);
-        }
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location == null) location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
         return new GPSCoordinates(location.getLatitude(),location.getLongitude());
     }
+    public static void getCurrLocation(final Context context,Consumer<Runnable> requestPermission,Consumer<GPSCoordinates> handleLocation) {
+        if (isHaveLocationPermissions(context)) {
+            requestPermission.accept(()-> handleLocation.accept(getLocationHelper(context)));
+        }else{
+            handleLocation.accept(getLocationHelper(context));
+        }
+    }
     public static String shortenText(String text,final int maxLength){
         if(text.length() > maxLength)text = text.substring(0,maxLength)+"...";
         return text;
+    }
+    public static boolean isHaveLocationPermissions(Context context){
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED;
     }
 }
