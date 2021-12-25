@@ -1,12 +1,20 @@
 package com.example.myapplication.utils;
 
+import static android.content.Context.LOCATION_SERVICE;
+
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.View;
@@ -16,7 +24,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
-
+import androidx.core.app.ActivityCompat;
+import com.example.myapplication.database.GPSCoordinates;
 import com.mobsandgeeks.saripaar.ValidationError;
 
 import java.io.ByteArrayOutputStream;
@@ -111,5 +120,24 @@ public class Utils {
                 e.printStackTrace();
             }
         }
+    }
+    public static void createBinaryAlert(Runnable onYes,Runnable onNo,String question,Context context){
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            if(which == DialogInterface.BUTTON_POSITIVE)onYes.run();
+            else if(which == DialogInterface.BUTTON_NEGATIVE)onNo.run();
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(question).setPositiveButton(android.R.string.yes, dialogClickListener)
+                .setNegativeButton(android.R.string.no, dialogClickListener).show();
+    }
+    public static GPSCoordinates getCurrLocation(final Context context) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return new GPSCoordinates(0,0);
+        }
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (location == null) location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        return new GPSCoordinates(location.getLatitude(),location.getLongitude());
     }
 }

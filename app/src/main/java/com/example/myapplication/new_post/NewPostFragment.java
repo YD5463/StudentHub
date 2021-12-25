@@ -1,15 +1,15 @@
 package com.example.myapplication.new_post;
 
+
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,31 +25,22 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+
 
 import com.example.myapplication.Home;
 import com.example.myapplication.database.DatabaseHandler;
-import com.example.myapplication.posts_list.PostDetails;
-import com.example.myapplication.utils.FirebaseUtils;
 import com.example.myapplication.R;
 import com.example.myapplication.utils.Utils;
 import com.example.myapplication.database.PostData;
 import com.example.myapplication.databinding.FragmentNewPostBinding;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+
 
 public class NewPostFragment extends Fragment implements Validator.ValidationListener {
     static final private String TAG = "NewPostFragment";
@@ -76,7 +67,8 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
     private ImageView createDefaultImage(){
         ImageView imageView = new ImageView(getContext());
         imageView.setImageDrawable(getDefaultImage());
-        imageView.setOnClickListener(this::onImagePick);
+        int curr_size = images.size();
+        imageView.setOnClickListener((v)->onImagePick(curr_size));
         int width = (int)getResources().getDimension(R.dimen.add_post_image_width);
         int height = (int)getResources().getDimension(R.dimen.add_post_image_height);
         int padding = (int)getResources().getDimension(R.dimen.add_post_image_padding);
@@ -86,9 +78,16 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
         linearLayout.addView(imageView);
         return imageView;
     }
-
-    private void onImagePick(View v){
-        someActivityResultLauncher.launch(Utils.createImageChooserIntent());
+    private void onImagePick(int index){
+        if(imagesCount!=0 && index < imagesCount){
+            Utils.createBinaryAlert(()->{
+                linearLayout.removeView(images.get(index));
+                images.remove(index);
+                imagesCount--;
+            },()->{},"Are you sure?",getContext());
+        }else{
+            someActivityResultLauncher.launch(Utils.createImageChooserIntent());
+        }
     }
 
     private int getPrice(){
@@ -98,7 +97,9 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
 
     private void upload_post(ProgressDialog mDialog,Context context,View v,List<String> imagesUris){
         String user_id =  FirebaseAuth.getInstance().getCurrentUser().getUid();
-        PostData post = new PostData(title.getText().toString(),description.getText().toString(), getPrice(),user_id,imagesUris);
+        PostData post = new PostData(title.getText().toString(),description.getText().toString(),
+                getPrice(),user_id,imagesUris,Utils.getCurrLocation(getContext()));
+        Log.d(TAG,post.toString());
         DatabaseHandler.addPost(post,()->{
             mDialog.cancel();
             cleanForm();
@@ -165,7 +166,7 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
     public void onValidationSucceeded() {
         Context context = getContext();
         ProgressDialog mDialog = Utils.createProgressDialog(getContext());
-        DatabaseHandler.uploadPostImages(images,imagesCount,()->{
+        DatabaseHandler.uploadPostImages(images.subList(0,imagesCount),()->{
             mDialog.cancel();
             Toast.makeText(context,"Failed to upload post",Toast.LENGTH_SHORT).show();
         },(imageUris)->{
