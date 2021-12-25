@@ -84,7 +84,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         database.child("posts")
                 .limitToFirst(PAGE_SIZE)
                 .startAt(curr_page*PAGE_SIZE)
-                .orderByChild("title") //TODO: change to creation time
+                .orderByChild("creation_date") //TODO: change to creation time
                 .addValueEventListener(new ValueEventListener() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override

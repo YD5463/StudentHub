@@ -25,6 +25,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Size;
 import androidx.fragment.app.Fragment;
 
 
@@ -37,6 +38,8 @@ import com.example.myapplication.databinding.FragmentNewPostBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.Max;
+import com.mobsandgeeks.saripaar.annotation.Min;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
 import java.util.ArrayList;
@@ -55,7 +58,7 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
     private EditText title;
     @NotEmpty()
     private EditText description;
-
+    @NotEmpty @Max(5000)
     private EditText price;
     private LinearLayout linearLayout;
     private ActivityResultLauncher<Intent> someActivityResultLauncher;
@@ -177,6 +180,10 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
     @Override
     public void onValidationSucceeded() {
         Context context = getContext();
+        if(imagesCount == 0){
+            Toast.makeText(context,"At least one image should be attached",Toast.LENGTH_SHORT).show();
+            return;
+        }
         ProgressDialog mDialog = Utils.createProgressDialog(getContext());
         DatabaseHandler.uploadPostImages(images.subList(0,imagesCount),()->{
             mDialog.cancel();
