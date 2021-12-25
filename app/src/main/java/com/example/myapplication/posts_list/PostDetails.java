@@ -1,7 +1,5 @@
 package com.example.myapplication.posts_list;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 
 import androidx.fragment.app.FragmentActivity;
@@ -51,9 +49,9 @@ public class PostDetails extends FragmentActivity {
     private GoogleMap googleMap;
 
     private void setMarker(GPSCoordinates location){
-        LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
-        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
+        LatLng lng = new LatLng(location.getLatitude(), location.getLongitude());
+        googleMap.addMarker(new MarkerOptions().position(lng).title("Marker Title").snippet("Marker Description"));
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(lng).zoom(12).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
     @Override

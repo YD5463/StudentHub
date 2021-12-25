@@ -28,6 +28,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
+
 import com.example.myapplication.database.GPSCoordinates;
 import com.mobsandgeeks.saripaar.ValidationError;
 
@@ -35,6 +36,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class Utils {
@@ -48,6 +50,7 @@ public class Utils {
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
     public static void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -66,7 +69,8 @@ public class Utils {
             return false;
         }
     }
-    public static void onValidationFailed(List<ValidationError> errors,Context context){
+
+    public static void onValidationFailed(List<ValidationError> errors, Context context) {
         for (ValidationError error : errors) {
             View view = error.getView();
             String message = error.getCollatedErrorMessage(context);
@@ -78,25 +82,27 @@ public class Utils {
             }
         }
     }
-    public static ProgressDialog createProgressDialog(Context context){
+
+    public static ProgressDialog createProgressDialog(Context context) {
         ProgressDialog mDialog = new ProgressDialog(context);
         mDialog.setMessage("Please wait...");
         mDialog.setCancelable(true);
         mDialog.show();
         return mDialog;
     }
-    public static Intent createImageChooserIntent(){
+
+    public static Intent createImageChooserIntent() {
         final String TYPE = "image/*";
         Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
         getIntent.setType(TYPE);
         Intent pickIntent = new Intent(Intent.ACTION_PICK);
-        pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,TYPE);
+        pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, TYPE);
         Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
         return chooserIntent;
     }
 
-    public static Bitmap imageViewToBitmap(ImageView image){
+    public static Bitmap imageViewToBitmap(ImageView image) {
         Drawable drawable = image.getDrawable();
         Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
@@ -104,14 +110,15 @@ public class Utils {
         drawable.draw(canvas);
         return bitmap;
     }
-    public static byte[] before_upload(ImageView image){
+
+    public static byte[] before_upload(ImageView image) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Bitmap bitmap = imageViewToBitmap(image);
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         return baos.toByteArray();
     }
 
-    public static void image_picker_handler(ActivityResult result,Context context,Consumer<Bitmap> handler){
+    public static void image_picker_handler(ActivityResult result, Context context, Consumer<Bitmap> handler) {
         if (result.getResultCode() == Activity.RESULT_OK) {
             Intent data = result.getData();
             assert data != null;
@@ -124,34 +131,31 @@ public class Utils {
             }
         }
     }
-    public static void createBinaryAlert(Runnable onYes,Runnable onNo,String question,Context context){
+
+    public static void createBinaryAlert(Runnable onYes, Runnable onNo, String question, Context context) {
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-            if(which == DialogInterface.BUTTON_POSITIVE)onYes.run();
-            else if(which == DialogInterface.BUTTON_NEGATIVE)onNo.run();
+            if (which == DialogInterface.BUTTON_POSITIVE) onYes.run();
+            else if (which == DialogInterface.BUTTON_NEGATIVE) onNo.run();
         };
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(question).setPositiveButton(android.R.string.yes, dialogClickListener)
                 .setNegativeButton(android.R.string.no, dialogClickListener).show();
     }
-    private static GPSCoordinates getLocationHelper(Context context){
+
+    public static GPSCoordinates getLocationHelper(Context context) {
         LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return null;
+        }
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location == null) location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
         return new GPSCoordinates(location.getLatitude(),location.getLongitude());
-    }
-    public static void getCurrLocation(final Context context,Consumer<Runnable> requestPermission,Consumer<GPSCoordinates> handleLocation) {
-        if (isHaveLocationPermissions(context)) {
-            requestPermission.accept(()-> handleLocation.accept(getLocationHelper(context)));
-        }else{
-            handleLocation.accept(getLocationHelper(context));
-        }
     }
     public static String shortenText(String text,final int maxLength){
         if(text.length() > maxLength)text = text.substring(0,maxLength)+"...";
         return text;
     }
-    public static boolean isHaveLocationPermissions(Context context){
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+    public static boolean isHaventLocationPermissions(Context context){
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
     }
 }

@@ -32,6 +32,7 @@ import androidx.fragment.app.Fragment;
 import com.example.myapplication.Home;
 import com.example.myapplication.database.DatabaseHandler;
 import com.example.myapplication.R;
+import com.example.myapplication.database.GPSCoordinates;
 import com.example.myapplication.utils.Utils;
 import com.example.myapplication.database.PostData;
 import com.example.myapplication.databinding.FragmentNewPostBinding;
@@ -44,6 +45,8 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 
 public class NewPostFragment extends Fragment implements Validator.ValidationListener {
@@ -52,6 +55,9 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
 
     private FragmentNewPostBinding binding;
 
+    ActivityResultLauncher<String> request_location;
+    ProgressDialog mDialog;
+    List<String> imagesUris;
     private int imagesCount = 0;
     private List<ImageView> images;
     @NotEmpty()
@@ -98,33 +104,31 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
         String priceStr = price.getText().toString();
         return !priceStr.isEmpty() ? Integer.parseInt(price.getText().toString()) : 0;
     }
-    private void askLocationPermission(Runnable onGranted){
-        registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-            if (isGranted) {
-                registerForActivityResult(new ActivityResultContracts.RequestPermission(),(isGranted2)->{
-                    if(isGranted2){
-                        onGranted.run();
-                    }
-                }).launch(Manifest.permission.ACCESS_COARSE_LOCATION);
-            }
-        }).launch(Manifest.permission.ACCESS_FINE_LOCATION);
+
+    public void getCurrLocation(Consumer<GPSCoordinates> handleLocation) {
+        if (Utils.isHaventLocationPermissions(getContext())) {
+            request_location.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+        }else{
+            handleLocation.accept(Utils.getLocationHelper(getContext()));
+        }
     }
-    private void upload_post(ProgressDialog mDialog,Context context,View v,List<String> imagesUris){
+    private void onPostDataReady(GPSCoordinates location){
         String user_id =  FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Utils.getCurrLocation(getContext(), this::askLocationPermission,(location)->{
-            PostData post = new PostData(title.getText().toString(),description.getText().toString(),
-                    getPrice(),user_id,imagesUris,location);
-            DatabaseHandler.addPost(post,()->{
-                mDialog.cancel();
-                cleanForm();
-                Utils.hideKeyboardFrom(context,v);
-                Toast.makeText(context, "Post Added Successfully.",Toast.LENGTH_SHORT).show();
-                startActivity( new Intent(getActivity(), Home.class));
-            },()->{
-                Toast.makeText(context, "Add Post Failed.",Toast.LENGTH_SHORT).show();
-                mDialog.cancel();
-            });
+        Context context = getContext();
+        View v = getView();
+        PostData post = new PostData(title.getText().toString(),description.getText().toString(),
+                getPrice(),user_id,imagesUris,location);
+        DatabaseHandler.addPost(post,()->{
+            mDialog.cancel();
+            cleanForm();
+            Utils.hideKeyboardFrom(context,v);
+            Toast.makeText(context, "Post Added Successfully.",Toast.LENGTH_SHORT).show();
+            startActivity( new Intent(getActivity(), Home.class));
+        },()->{
+            Toast.makeText(context, "Add Post Failed.",Toast.LENGTH_SHORT).show();
+            mDialog.cancel();
         });
+
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -143,13 +147,16 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
             }
         }));
     }
+
     private void init(View root){
         title = root.findViewById(R.id.post_title);
         description = root.findViewById(R.id.post_description);
         price = root.findViewById(R.id.post_price);
         linearLayout = root.findViewById(R.id.new_post_images);
         Button addPostBtn = root.findViewById(R.id.add_post_btn);
-
+        request_location = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if(isGranted) getCurrLocation(this::onPostDataReady);
+        });
         images = new ArrayList<>(MAX_IMAGES);
         images.add(createDefaultImage());
         Validator validator = new Validator(this);
@@ -184,12 +191,13 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
             Toast.makeText(context,"At least one image should be attached",Toast.LENGTH_SHORT).show();
             return;
         }
-        ProgressDialog mDialog = Utils.createProgressDialog(getContext());
+        mDialog = Utils.createProgressDialog(getContext());
         DatabaseHandler.uploadPostImages(images.subList(0,imagesCount),()->{
             mDialog.cancel();
             Toast.makeText(context,"Failed to upload post",Toast.LENGTH_SHORT).show();
         },(imageUris)->{
-            upload_post(mDialog,context,getView(),imageUris);
+            this.imagesUris = imageUris;
+            getCurrLocation(this::onPostDataReady);
         });
     }
 
