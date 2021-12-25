@@ -5,6 +5,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.myapplication.Home;
 import com.example.myapplication.R;
@@ -46,12 +47,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class PostDetails extends AppCompatActivity {
+public class PostDetails extends FragmentActivity {
     static final String TAG = "PostDetails";
     private ProgressDialog progressDialog;
     private boolean isCurrentUserAdmin = false;
-    MapView mMapView;
-    GoogleMap googleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,45 +117,6 @@ public class PostDetails extends AppCompatActivity {
         });
     }
 
-    private void init_map(GPSCoordinates location) {
-        mMapView = (MapView) findViewById(R.id.mapView);
-        mMapView.onResume(); // needed to get the map to display immediately
-        try {
-            MapsInitializer.initialize(getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        mMapView.getMapAsync(mMap -> {
-            Log.d(TAG,"in map async");
-            googleMap = mMap;
-            // For showing a move to my location button
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityResultLauncher<String[]> locationPermissionRequest =
-                        registerForActivityResult(new ActivityResultContracts
-                                        .RequestMultiplePermissions(), result -> {
-                            Boolean fineLocationGranted = result.getOrDefault(
-                                    Manifest.permission.ACCESS_FINE_LOCATION, false);
-                            Boolean coarseLocationGranted = result.getOrDefault(
-                                    Manifest.permission.ACCESS_COARSE_LOCATION, false);
-                        });
-                locationPermissionRequest.launch(new String[] {
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                });
-
-            }
-            googleMap.setMyLocationEnabled(true);
-            // For dropping a marker at a point on the Map
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
-
-            // For zooming automatically to the location of the marker
-            CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-        });
-    }
     @SuppressLint("SetTextI18n")
     private void init(){
         PostData postData = (PostData) getIntent().getSerializableExtra("post_data");
@@ -166,7 +126,7 @@ public class PostDetails extends AppCompatActivity {
         TextView postDate = findViewById(R.id.uploadDate);
         TextView price = findViewById(R.id.price);
         description.setText(postData.getDescription());
-        price.setText(postData.getPrice()+"");
+        price.setText("$"+postData.getPrice());
         title.setText(postData.getTitle());
         postDate.setText("Posted: "+postData.getCreation_date());
         fetch_additional_data(postData.getUid(),postData.getCreation_date());
@@ -174,7 +134,6 @@ public class PostDetails extends AppCompatActivity {
             new DownloadImageTask(findViewById(R.id.post_image))
                     .execute(postData.getImages().get(0));
         }
-//        init_map(postData.getSeller_location());
     }
 
 }
