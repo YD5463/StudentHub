@@ -16,12 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.R;
 import com.example.myapplication.database.PostData;
 import com.example.myapplication.utils.DownloadImageTask;
+import com.example.myapplication.utils.Utils;
 
 import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
     private static final String TAG = "PostAdapter";
     private final List<PostData> postsList;
+    private static final int MAX_DESCRIPTION_LEN = 30;
+    private static final int MAX_TITLE_LEN = 10;
 
     static class PostViewHolder extends RecyclerView.ViewHolder {
         TextView title, description, price;
@@ -53,8 +56,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     @Override
     public void onBindViewHolder(PostViewHolder holder, int position) {
         PostData curr_post = postsList.get(position);
-        holder.title.setText(curr_post.getTitle());
-        holder.description.setText(curr_post.getDescription());
+        holder.title.setText(Utils.shortenText(curr_post.getTitle(),MAX_TITLE_LEN));
+        holder.description.setText(Utils.shortenText(curr_post.getDescription(),MAX_DESCRIPTION_LEN));
         holder.price.setText(String.valueOf(curr_post.getPrice()));
         holder.starCount.setRating(curr_post.getStarCount());
         List<String> images_urls = curr_post.getImages();

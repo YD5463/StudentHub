@@ -140,4 +140,8 @@ public class Utils {
         if (location == null) location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
         return new GPSCoordinates(location.getLatitude(),location.getLongitude());
     }
+    public static String shortenText(String text,final int maxLength){
+        if(text.length() > maxLength)text = text.substring(0,maxLength)+"...";
+        return text;
+    }
 }
