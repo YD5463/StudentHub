@@ -30,7 +30,6 @@
 <!--            app:destination="@+id/myPostsFragment" />-->
     </fragment>
 
-<!--    &lt;!&ndash;My Posts Fragment&ndash;&gt;-->
 <!--    <fragment-->
 <!--        android:id="@+id/myPostsFragment"-->
 <!--        android:name="com.example.myapplication.MyPostsFragment"-->

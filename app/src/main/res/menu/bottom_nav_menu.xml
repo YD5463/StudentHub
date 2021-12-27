@@ -5,12 +5,9 @@
         android:title="@string/title_home"
         android:icon="@drawable/ic_home_black_24dp"/>
 
-<!--    <item android:id="@+id/navigation_Chats"-->
-<!--        android:title="@string/chats"-->
-<!--        android:icon="@drawable/ic_baseline_chat_24"/>-->
-
     <item android:id="@+id/navigation_newPost"
         android:title="@string/new_post"
+        android:icon="@drawable/ic_baseline_add_circle_24"
         />
 
     <item android:id="@+id/navigation_myAccount"

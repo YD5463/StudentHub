@@ -38,11 +38,11 @@ public class Home extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        binding.fab.setOnClickListener(v -> {
-            Fragment fragment = new NewPostFragment();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
-        });
+//        binding.fab.setOnClickListener(v -> {
+//            Fragment fragment = new NewPostFragment();
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+//        });
     }
 
 }
