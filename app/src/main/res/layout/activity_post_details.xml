@@ -140,7 +140,8 @@
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="200dp"
+            />
         <Button
             android:id="@+id/delete_post_btn"
             android:layout_width="match_parent"
@@ -148,7 +149,9 @@
             android:background="#006747"
             android:text="@string/delete_post"
             android:layout_marginTop="10dp"
-            android:visibility="gone"/>
+            android:layout_margin="20dp"
+            android:visibility="gone"
+            />
         </LinearLayout>
 
 </ScrollView>

@@ -128,17 +128,21 @@ public class PostDetails extends FragmentActivity {
         });
     }
 
-
-    @SuppressLint("SetTextI18n")
-    private void init(){
-        PostData postData = (PostData) getIntent().getSerializableExtra("post_data");
-        GPSCoordinates location = postData.getSeller_location();
-        if(location == null)location = new GPSCoordinates(32.085300, 34.781769);
+    private void set_location_map(GPSCoordinates location){
+        if(location == null){
+            mMapView.setVisibility(View.GONE);
+            return;
+        }
         final GPSCoordinates finalLocation = location;
         mMapView.getMapAsync(mMap -> {
             googleMap = mMap;
             setMarker(finalLocation);
         });
+    }
+    @SuppressLint("SetTextI18n")
+    private void init(){
+        PostData postData = (PostData) getIntent().getSerializableExtra("post_data");
+        set_location_map(postData.getSeller_location());
         TextView title = findViewById(R.id.title_post_detail);
         TextView description = findViewById(R.id.description);
         TextView postDate = findViewById(R.id.uploadDate);

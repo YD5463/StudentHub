@@ -156,6 +156,7 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
         Button addPostBtn = root.findViewById(R.id.add_post_btn);
         request_location = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
             if(isGranted) getCurrLocation(this::onPostDataReady);
+            else onPostDataReady(null);
         });
         images = new ArrayList<>(MAX_IMAGES);
         images.add(createDefaultImage());
