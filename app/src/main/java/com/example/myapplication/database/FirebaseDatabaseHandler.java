@@ -89,8 +89,9 @@ public class FirebaseDatabaseHandler{
             }
         });
     }
-    private static void uploadImages(List<ImageView> images,final int imagesCount,Runnable onFailed,Consumer<List<String>> onFinishUpload,String location,String imageExtension){
+    private static void uploadImages(List<ImageView> images,Runnable onFailed,Consumer<List<String>> onFinishUpload,String location,String imageExtension){
         List<String> imagesUris = new ArrayList<>();
+        final int imagesCount = images.size();
         if(imagesCount == 0)onFinishUpload.accept(imagesUris);
         for(int i=0;i<imagesCount;i++){
             final StorageReference storageReference = FirebaseStorage.getInstance().
@@ -111,13 +112,13 @@ public class FirebaseDatabaseHandler{
         }
     }
 
-    public static void uploadPostImages(List<ImageView> images,final int imagesCount,Runnable onFailed,Consumer<List<String>> onFinishUpload){
-           uploadImages(images,imagesCount,onFailed,onFinishUpload,POSTS_IMAGES,IMAGE_EXTENSION);
+    public static void uploadPostImages(List<ImageView> images,Runnable onFailed,Consumer<List<String>> onFinishUpload){
+           uploadImages(images,onFailed,onFinishUpload,POSTS_IMAGES,IMAGE_EXTENSION);
     }
     public static void uploadProfileImage(ImageView image,Runnable onFailed,Consumer<String> onFinishUpload){
         List<ImageView> images = new ArrayList<>();
         images.add(image);
-        uploadImages(images,1,onFailed,
+        uploadImages(images,onFailed,
                 (imagesUris)->onFinishUpload.accept(imagesUris.get(0)),
                 PROFILE_IMAGES,IMAGE_EXTENSION);
     }

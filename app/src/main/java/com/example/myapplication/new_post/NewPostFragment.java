@@ -1,15 +1,16 @@
 package com.example.myapplication.new_post;
 
+
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,32 +25,29 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Size;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+
 
 import com.example.myapplication.Home;
 import com.example.myapplication.database.DatabaseHandler;
-import com.example.myapplication.posts_list.PostDetails;
-import com.example.myapplication.utils.FirebaseUtils;
 import com.example.myapplication.R;
+import com.example.myapplication.database.GPSCoordinates;
 import com.example.myapplication.utils.Utils;
 import com.example.myapplication.database.PostData;
 import com.example.myapplication.databinding.FragmentNewPostBinding;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.Max;
+import com.mobsandgeeks.saripaar.annotation.Min;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
 
 public class NewPostFragment extends Fragment implements Validator.ValidationListener {
     static final private String TAG = "NewPostFragment";
@@ -57,13 +55,16 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
 
     private FragmentNewPostBinding binding;
 
+    ActivityResultLauncher<String> request_location;
+    ProgressDialog mDialog;
+    List<String> imagesUris;
     private int imagesCount = 0;
     private List<ImageView> images;
     @NotEmpty()
     private EditText title;
     @NotEmpty()
     private EditText description;
-
+    @NotEmpty @Max(5000)
     private EditText price;
     private LinearLayout linearLayout;
     private ActivityResultLauncher<Intent> someActivityResultLauncher;
@@ -76,7 +77,8 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
     private ImageView createDefaultImage(){
         ImageView imageView = new ImageView(getContext());
         imageView.setImageDrawable(getDefaultImage());
-        imageView.setOnClickListener(this::onImagePick);
+        int curr_size = images.size();
+        imageView.setOnClickListener((v)->onImagePick(curr_size));
         int width = (int)getResources().getDimension(R.dimen.add_post_image_width);
         int height = (int)getResources().getDimension(R.dimen.add_post_image_height);
         int padding = (int)getResources().getDimension(R.dimen.add_post_image_padding);
@@ -86,9 +88,16 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
         linearLayout.addView(imageView);
         return imageView;
     }
-
-    private void onImagePick(View v){
-        someActivityResultLauncher.launch(Utils.createImageChooserIntent());
+    private void onImagePick(int index){
+        if(imagesCount!=0 && index < imagesCount){
+            Utils.createBinaryAlert(()->{
+                linearLayout.removeView(images.get(index));
+                images.remove(index);
+                imagesCount--;
+            },()->{},"Are you sure?",getContext());
+        }else{
+            someActivityResultLauncher.launch(Utils.createImageChooserIntent());
+        }
     }
 
     private int getPrice(){
@@ -96,9 +105,19 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
         return !priceStr.isEmpty() ? Integer.parseInt(price.getText().toString()) : 0;
     }
 
-    private void upload_post(ProgressDialog mDialog,Context context,View v,List<String> imagesUris){
+    public void getCurrLocation(Consumer<GPSCoordinates> handleLocation) {
+        if (Utils.isHaventLocationPermissions(getContext())) {
+            request_location.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+        }else{
+            handleLocation.accept(Utils.getLocationHelper(getContext()));
+        }
+    }
+    private void onPostDataReady(GPSCoordinates location){
         String user_id =  FirebaseAuth.getInstance().getCurrentUser().getUid();
-        PostData post = new PostData(title.getText().toString(),description.getText().toString(), getPrice(),user_id,imagesUris);
+        Context context = getContext();
+        View v = getView();
+        PostData post = new PostData(title.getText().toString(),description.getText().toString(),
+                getPrice(),user_id,imagesUris,location);
         DatabaseHandler.addPost(post,()->{
             mDialog.cancel();
             cleanForm();
@@ -109,6 +128,7 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
             Toast.makeText(context, "Add Post Failed.",Toast.LENGTH_SHORT).show();
             mDialog.cancel();
         });
+
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -127,13 +147,16 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
             }
         }));
     }
+
     private void init(View root){
         title = root.findViewById(R.id.post_title);
         description = root.findViewById(R.id.post_description);
         price = root.findViewById(R.id.post_price);
         linearLayout = root.findViewById(R.id.new_post_images);
         Button addPostBtn = root.findViewById(R.id.add_post_btn);
-
+        request_location = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if(isGranted) getCurrLocation(this::onPostDataReady);
+        });
         images = new ArrayList<>(MAX_IMAGES);
         images.add(createDefaultImage());
         Validator validator = new Validator(this);
@@ -164,12 +187,17 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
     @Override
     public void onValidationSucceeded() {
         Context context = getContext();
-        ProgressDialog mDialog = Utils.createProgressDialog(getContext());
-        DatabaseHandler.uploadPostImages(images,imagesCount,()->{
+        if(imagesCount == 0){
+            Toast.makeText(context,"At least one image should be attached",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mDialog = Utils.createProgressDialog(getContext());
+        DatabaseHandler.uploadPostImages(images.subList(0,imagesCount),()->{
             mDialog.cancel();
             Toast.makeText(context,"Failed to upload post",Toast.LENGTH_SHORT).show();
         },(imageUris)->{
-            upload_post(mDialog,context,getView(),imageUris);
+            this.imagesUris = imageUris;
+            getCurrLocation(this::onPostDataReady);
         });
     }
 

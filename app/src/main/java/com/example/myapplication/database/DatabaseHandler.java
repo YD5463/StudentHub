@@ -21,9 +21,9 @@ public class DatabaseHandler{
     public static void addPost(PostData postData, Runnable onSuccess, Runnable onFailed){
         FirebaseDatabaseHandler.addPost(postData,onSuccess,onFailed);
     }
-    public static void uploadPostImages(List<ImageView> images, final int imagesCount, Runnable onFailed,
+    public static void uploadPostImages(List<ImageView> images, Runnable onFailed,
                                  Consumer<List<String>> onFinishUpload){
-        FirebaseDatabaseHandler.uploadPostImages(images,imagesCount,onFailed,onFinishUpload);
+        FirebaseDatabaseHandler.uploadPostImages(images,onFailed,onFinishUpload);
     }
     public static void uploadProfileImage(ImageView image, Runnable onFailed, Consumer<String> onFinishUpload){
         FirebaseDatabaseHandler.uploadProfileImage(image,onFailed,onFinishUpload);

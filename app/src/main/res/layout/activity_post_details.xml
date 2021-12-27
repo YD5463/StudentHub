@@ -1,39 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".posts_list.PostDetails"
-    android:orientation="vertical"
-    >
-
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/post_details_main_layout"
+        >
     <ImageView
         android:id="@+id/post_image"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
         android:adjustViewBounds="true"
+        android:contentDescription="@string/post_image"
         />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="15dp"
         >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="10dp"
-        >
-            <TextView
-                android:id="@+id/title_post_detail"
-                android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="30sp"
-                android:textColor="@color/black"
-                android:paddingBottom="5dp"
-                />
+                android:layout_weight="1"
+                >
+                <TextView
+                    android:id="@+id/title_post_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30sp"
+                    android:textColor="@color/black"
+                    android:paddingBottom="5dp"
+                    />
+            </LinearLayout>
+                <TextView
+                    android:id="@+id/price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="#00FF80"
+                    />
+            </LinearLayout>
             <TextView
                 android:id="@+id/price_post_detail"
                 android:layout_width="wrap_content"
@@ -48,24 +69,12 @@
             android:padding="25dp"
             android:orientation="horizontal"
             >
-            <ImageView
-                android:id="@+id/post_description"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_baseline_article_24"
-                android:contentDescription="@string/post_description" />
-            <LinearLayout
-                android:layout_weight="1"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                >
-                <TextView
-                    android:id="@+id/description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    />
-            </LinearLayout>
+                android:textSize="15sp"
+                />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,39 +82,22 @@
             android:padding="25dp"
             android:orientation="horizontal"
             >
-            <ImageView
-                android:id="@+id/post_price"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_baseline_attach_money_24"
-                android:contentDescription="@string/post_price" />
-            <LinearLayout
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+            <androidx.cardview.widget.CardView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_horizontal"
+                app:cardCornerRadius="30dp"
+                app:cardElevation="0dp"
                 >
-                <TextView
-                    android:id="@+id/price"
+                <ImageView
+                    android:id="@+id/seller_profile_image"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_baseline_account_circle_24"
+                    android:contentDescription="@string/profile_image"
                     />
-            </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="25dp"
-            android:orientation="horizontal"
-            >
+            </androidx.cardview.widget.CardView>
 
-            <ImageView
-                android:id="@+id/seller_profile_image"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_baseline_person_24"
-                android:contentDescription="@string/profile_image" />
             <LinearLayout
                 android:layout_weight="1"
                 android:layout_width="0dp"
@@ -125,8 +117,8 @@
             </LinearLayout>
             <ImageView
                 android:id="@+id/call_seller_icon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:padding="10dp"
                 android:src="@drawable/ic_baseline_phone_24"
                 android:contentDescription="@string/phone_icon_desc"
@@ -145,18 +137,18 @@
             android:textStyle="bold" />
 
 
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
         <Button
             android:id="@+id/delete_post_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#006747"
             android:text="@string/delete_post"
+            android:layout_marginTop="10dp"
             android:visibility="gone"/>
+        </LinearLayout>
 
-
-    </LinearLayout>
-
-
-
-
-</LinearLayout>
+</ScrollView>

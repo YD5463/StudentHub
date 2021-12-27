@@ -84,7 +84,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         database.child("posts")
                 .limitToFirst(PAGE_SIZE)
                 .startAt(curr_page*PAGE_SIZE)
-                .orderByChild("title") //TODO: change to creation time
+                .orderByChild("creation_date") //TODO: change to creation time
                 .addValueEventListener(new ValueEventListener() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
@@ -93,15 +93,19 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
                             Toast.makeText(getContext(), "No more Posts", Toast.LENGTH_SHORT).show();
                         }
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
-                            PostData post = data.getValue(PostData.class);
-                            assert post != null;
-                            if(!posts_list.isEmpty() && post.getCreation_date().equals(posts_list.get(0).getCreation_date())){
-                                progress_bar.setVisibility(RecyclerView.GONE);
-                                is_list_ends = true;
-                                return;
+                            try{
+                                PostData post = data.getValue(PostData.class);
+                                assert post != null;
+                                if(!posts_list.isEmpty() && post.getCreation_date().equals(posts_list.get(0).getCreation_date())){
+                                    progress_bar.setVisibility(RecyclerView.GONE);
+                                    is_list_ends = true;
+                                    return;
+                                }
+                                posts_list.add(post);
+                                getActivity().runOnUiThread(()->post_adapter.notifyDataSetChanged());
+                            }catch (Exception e){
+                                Log.e(TAG,"error loading current post"+e.getMessage());
                             }
-                            posts_list.add(post);
-                            getActivity().runOnUiThread(()->post_adapter.notifyDataSetChanged());
                         }
                         processSearch(curr_query_search);
                         progress_bar.setVisibility(RecyclerView.GONE);
