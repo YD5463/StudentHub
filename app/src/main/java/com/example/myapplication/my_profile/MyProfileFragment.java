@@ -1,6 +1,7 @@
 package com.example.myapplication.my_profile;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,12 +25,22 @@ public class MyProfileFragment extends Fragment{
     static final String TAG = "AccountFragment";
     private AccountOption manage_users_option;
 
-    private void logout(){
+    private void logout() {
         Intent i = new Intent(getActivity(), MainActivity.class);
         startActivity(i);
         (requireActivity()).overridePendingTransition(0, 0);
         FirebaseAuth.getInstance().signOut();
     }
+
+    private void bug_report() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, "bugreports@studenhub.com");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Bug Report");
+        startActivity(intent);
+
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_account, container, false);
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
@@ -60,6 +71,8 @@ public class MyProfileFragment extends Fragment{
         });
         AccountOption logout_option = root.findViewById(R.id.logout);
         logout_option.setOnClickListener((v)->logout());
+        AccountOption report_option = root.findViewById(R.id.report);
+        report_option.setOnClickListener((v)->bug_report());
         AccountOption my_posts_option = root.findViewById(R.id.my_posts);
         my_posts_option.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), MyPostsActivity.class);

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#E9E9E9"
+    android:background="@drawable/gradient_colors"
     android:paddingTop="40dp"
     tools:context=".my_profile.MyProfileFragment">
 
@@ -80,13 +80,22 @@
         android:focusable="true"
         android:visibility="gone"
         />
+    <com.example.myapplication.my_profile.AccountOption
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="Bug Report"
+        app:icon="@drawable/ic_baseline_bug_report_24"
+        app:iconBackground="@color/gray_600"
+        android:id="@+id/report"
+        android:clickable="true"
+        android:focusable="true" />
 
     <com.example.myapplication.my_profile.AccountOption
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title="@string/logout"
         app:icon="@drawable/ic_baseline_logout_24"
-        app:iconBackground="@color/yellow_light"
+        app:iconBackground="@color/light_blue_600"
         android:id="@+id/logout"
         android:clickable="true"
         android:focusable="true" />
