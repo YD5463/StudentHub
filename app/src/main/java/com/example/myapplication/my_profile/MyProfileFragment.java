@@ -13,14 +13,12 @@ import androidx.fragment.app.Fragment;
 import com.example.myapplication.R;
 import com.example.myapplication.admin.ManageUsers;
 import com.example.myapplication.auth.MainActivity;
-import com.example.myapplication.database.UserData;
+import com.example.myapplication.business_entities.UserData;
 import com.example.myapplication.utils.DownloadImageTask;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.Objects;
 
 public class MyProfileFragment extends Fragment{
     static final String TAG = "AccountFragment";

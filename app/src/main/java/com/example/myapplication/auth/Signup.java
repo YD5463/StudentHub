@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.Home;
 import com.example.myapplication.R;
 import com.example.myapplication.database.DatabaseHandler;
-import com.example.myapplication.database.UserData;
+import com.example.myapplication.business_entities.UserData;
 import com.example.myapplication.utils.Utils;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;

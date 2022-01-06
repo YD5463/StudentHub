@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.database.PostData;
+import com.example.myapplication.business_entities.PostData;
 import com.example.myapplication.utils.DownloadImageTask;
 import com.example.myapplication.utils.Utils;
 

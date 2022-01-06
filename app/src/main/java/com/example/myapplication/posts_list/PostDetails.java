@@ -6,9 +6,9 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.myapplication.Home;
 import com.example.myapplication.R;
-import com.example.myapplication.database.GPSCoordinates;
-import com.example.myapplication.database.PostData;
-import com.example.myapplication.database.UserData;
+import com.example.myapplication.business_entities.GPSCoordinates;
+import com.example.myapplication.business_entities.PostData;
+import com.example.myapplication.business_entities.UserData;
 import com.example.myapplication.utils.DownloadImageTask;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,19 +25,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 

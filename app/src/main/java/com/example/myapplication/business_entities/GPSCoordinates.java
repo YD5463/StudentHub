@@ -1,4 +1,4 @@
-package com.example.myapplication.database;
+package com.example.myapplication.business_entities;
 
 import androidx.annotation.NonNull;
 

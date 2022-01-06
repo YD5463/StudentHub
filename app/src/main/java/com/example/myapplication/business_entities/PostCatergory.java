@@ -1,4 +1,4 @@
-package com.example.myapplication.database;
+package com.example.myapplication.business_entities;
 
 public class PostCatergory {
     private String name;

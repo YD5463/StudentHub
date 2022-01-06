@@ -3,15 +3,12 @@ package com.example.myapplication.new_post;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,27 +22,24 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Size;
 import androidx.fragment.app.Fragment;
 
 
 import com.example.myapplication.Home;
 import com.example.myapplication.database.DatabaseHandler;
 import com.example.myapplication.R;
-import com.example.myapplication.database.GPSCoordinates;
+import com.example.myapplication.business_entities.GPSCoordinates;
 import com.example.myapplication.utils.Utils;
-import com.example.myapplication.database.PostData;
+import com.example.myapplication.business_entities.PostData;
 import com.example.myapplication.databinding.FragmentNewPostBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Max;
-import com.mobsandgeeks.saripaar.annotation.Min;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 

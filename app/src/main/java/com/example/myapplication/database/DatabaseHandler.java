@@ -6,6 +6,9 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.myapplication.business_entities.PostData;
+import com.example.myapplication.business_entities.UserData;
+
 import java.util.List;
 import java.util.function.Consumer;
 

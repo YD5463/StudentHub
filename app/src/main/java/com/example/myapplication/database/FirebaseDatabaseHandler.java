@@ -7,16 +7,13 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.myapplication.business_entities.PostData;
+import com.example.myapplication.business_entities.UserData;
 import com.example.myapplication.utils.Utils;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -25,9 +22,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -54,7 +49,7 @@ public class FirebaseDatabaseHandler{
             onFailed.run();
         }
     }
-    static public void getUserById(@NonNull String userId,@NonNull Consumer<UserData> onSuccess,@Nullable Runnable onFailed) {
+    static public void getUserById(@NonNull String userId, @NonNull Consumer<UserData> onSuccess, @Nullable Runnable onFailed) {
         database.child(USERS_TABLE+"/" + userId).get().addOnCompleteListener((task) -> {
             if(task.isSuccessful()){
                 UserData user = task.getResult().getValue(UserData.class);
