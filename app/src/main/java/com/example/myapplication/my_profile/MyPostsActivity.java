@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.myapplication.R;
 import com.example.myapplication.database.PostData;
@@ -50,13 +51,17 @@ public class MyPostsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    PostData post = snapshot.getValue(PostData.class);
-                    System.out.println(post);
-                    assert post != null;
-                    if(post.getUid().equals(current_user_id)) {
-                        filtered_list.add(post);
+                    try{
+                        PostData post = snapshot.getValue(PostData.class);
+                        System.out.println(post);
+                        assert post != null;
+                        if(post.getUid().equals(current_user_id)) {
+                            filtered_list.add(post);
+                        }
+                        runOnUiThread(()->post_adapter.notifyDataSetChanged());
+                    }catch (Exception e){
+                        Log.e("MyPosts","Error while featcing from db \n"+ e.getMessage());
                     }
-                    runOnUiThread(()->post_adapter.notifyDataSetChanged());
                 }
             }
             @Override

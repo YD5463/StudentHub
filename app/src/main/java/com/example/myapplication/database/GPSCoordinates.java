@@ -29,13 +29,4 @@ public class GPSCoordinates implements Serializable {
         this.longitude = (float) longitude;
         this.latitude = (float) latitude;
     }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "GPSCoordinates{" +
-                "longitude=" + longitude +
-                ", latitude=" + latitude +
-                '}';
-    }
 }

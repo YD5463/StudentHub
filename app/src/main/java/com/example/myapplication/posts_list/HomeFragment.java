@@ -65,7 +65,6 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         recycler_view.setLayoutManager(mLayoutManager);
         recycler_view.setItemAnimator(new DefaultItemAnimator());
         recycler_view.setAdapter(post_adapter);
-        //TODO: find replacement for setOnScrollListener
         recycler_view.setOnScrollListener(new RecyclerOnScrollListener(mLayoutManager) {
             @Override
             public void onLoadMore(int current_page) {
@@ -84,7 +83,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         database.child("posts")
                 .limitToFirst(PAGE_SIZE)
                 .startAt(curr_page*PAGE_SIZE)
-                .orderByChild("creation_date") //TODO: change to creation time
+                .orderByChild("creation_date")
                 .addValueEventListener(new ValueEventListener() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
