@@ -1,6 +1,5 @@
 package com.example.myapplication.my_profile;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,33 +8,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
 import com.example.myapplication.R;
 import com.example.myapplication.admin.ManageUsers;
 import com.example.myapplication.auth.MainActivity;
 import com.example.myapplication.database.UserData;
-import com.example.myapplication.databinding.FragmentAccountBinding;
 import com.example.myapplication.utils.DownloadImageTask;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class AccountFragment extends Fragment{
+import java.util.Objects;
+
+public class MyProfileFragment extends Fragment{
     static final String TAG = "AccountFragment";
-    private FragmentAccountBinding binding;
     private AccountOption manage_users_option;
 
     private void logout(){
         Intent i = new Intent(getActivity(), MainActivity.class);
         startActivity(i);
-        (getActivity()).overridePendingTransition(0, 0);
+        (requireActivity()).overridePendingTransition(0, 0);
         FirebaseAuth.getInstance().signOut();
     }
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentAccountBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_account, container, false);
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
         TextView usernameView = root.findViewById(R.id.user_name);
@@ -47,7 +45,7 @@ public class AccountFragment extends Fragment{
             if(task.isSuccessful()){
                 UserData userData = task.getResult().getValue(UserData.class);
                 assert userData != null;
-                usernameView.setText(userData.fullname);
+                usernameView.setText(userData.getName());
                 if(userData.isAdmin){
                     manage_users_option.setVisibility(View.VISIBLE);
                 }
@@ -75,6 +73,5 @@ public class AccountFragment extends Fragment{
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
     }
 }

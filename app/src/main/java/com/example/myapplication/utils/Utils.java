@@ -158,4 +158,8 @@ public class Utils {
     public static boolean isHaventLocationPermissions(Context context){
         return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
     }
+
+    public static Context getAppContext() {
+        return getAppContext();
+    }
 }

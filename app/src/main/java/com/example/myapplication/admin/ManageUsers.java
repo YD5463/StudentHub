@@ -1,17 +1,15 @@
 package com.example.myapplication.admin;
 
+import android.annotation.SuppressLint;
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
-import android.os.Bundle;
-
 import com.example.myapplication.R;
-import com.example.myapplication.database.PostData;
 import com.example.myapplication.database.UserData;
-import com.example.myapplication.posts_list.PostAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

@@ -1,11 +1,20 @@
 package com.example.myapplication.database;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.myapplication.utils.Utils;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,7 +25,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -31,6 +42,12 @@ public class FirebaseDatabaseHandler{
     public static final String POSTS_IMAGES = "posts-images";
     private static final String IMAGE_EXTENSION = ".jpg";
     public static final String PROFILE_IMAGES = "profile-images";
+    public static final String SERVER_URL = "http://172.18.0.1:5000/api/";
+    private final Context context;
+
+    public FirebaseDatabaseHandler(Context context) {
+        this.context = context;
+    }
 
     static private void callOnFailed(@Nullable Runnable onFailed){
         if(onFailed != null){
@@ -78,21 +95,25 @@ public class FirebaseDatabaseHandler{
 
     }
 
-    public static void addPost(PostData postData,Runnable onSuccess,Runnable onFailed){
-        String key = database.child(POSTS_TABLE).push().getKey();
-        Task<?> addToDBTask = database.child("/"+POSTS_TABLE+"/" + key).updateChildren(postData.toMap());
-        addToDBTask.addOnCompleteListener(task->{
-            if(task.isSuccessful()){
-                onSuccess.run();
-            }else{
-                onFailed.run();
-            }
-        });
+    public void addPost(PostData postData, Runnable onSuccess, Runnable onFailed){
+        try {
+            RequestQueue queue = Volley.newRequestQueue(context);
+            JsonObjectRequest stringRequest = new JsonObjectRequest(
+                    Request.Method.POST,
+                    SERVER_URL + "posts",
+                    postData.toJsonObject(),
+                    response -> onSuccess.run(),
+                    error -> onFailed.run()
+            );
+            queue.add(stringRequest);
+        }
+        catch (Exception ignored){}
     }
+
     private static void uploadImages(List<ImageView> images,Runnable onFailed,Consumer<List<String>> onFinishUpload,String location,String imageExtension){
         List<String> imagesUris = new ArrayList<>();
         final int imagesCount = images.size();
-        if(imagesCount == 0)onFinishUpload.accept(imagesUris);
+        if(imagesCount == 0) onFinishUpload.accept(imagesUris);
         for(int i=0;i<imagesCount;i++){
             final StorageReference storageReference = FirebaseStorage.getInstance().
                     getReference(location+"/" + UUID.randomUUID().toString() + imageExtension);
@@ -115,6 +136,7 @@ public class FirebaseDatabaseHandler{
     public static void uploadPostImages(List<ImageView> images,Runnable onFailed,Consumer<List<String>> onFinishUpload){
            uploadImages(images,onFailed,onFinishUpload,POSTS_IMAGES,IMAGE_EXTENSION);
     }
+
     public static void uploadProfileImage(ImageView image,Runnable onFailed,Consumer<String> onFinishUpload){
         List<ImageView> images = new ArrayList<>();
         images.add(image);

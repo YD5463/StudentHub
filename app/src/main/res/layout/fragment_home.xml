@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:backgroundTint="#CECECE"
     tools:context=".posts_list.HomeFragment"
-    android:layout_margin="25dp"
+    android:paddingHorizontal="25dp"
     >
     <ProgressBar
         android:id="@+id/progress_bar_home"

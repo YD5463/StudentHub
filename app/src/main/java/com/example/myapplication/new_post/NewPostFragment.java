@@ -68,6 +68,7 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
     private EditText price;
     private LinearLayout linearLayout;
     private ActivityResultLauncher<Intent> someActivityResultLauncher;
+    private DatabaseHandler db;
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private Drawable getDefaultImage(){
@@ -116,9 +117,8 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
         String user_id =  FirebaseAuth.getInstance().getCurrentUser().getUid();
         Context context = getContext();
         View v = getView();
-        PostData post = new PostData(title.getText().toString(),description.getText().toString(),
-                getPrice(),user_id,imagesUris,location);
-        DatabaseHandler.addPost(post,()->{
+        PostData post = new PostData(title.getText().toString(),description.getText().toString(), getPrice(), user_id, imagesUris, location);
+        db.addPost(post,()->{
             mDialog.cancel();
             cleanForm();
             Utils.hideKeyboardFrom(context,v);
@@ -165,7 +165,9 @@ public class NewPostFragment extends Fragment implements Validator.ValidationLis
         addPostBtn.setOnClickListener(v -> validator.validate());
         someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                this::add_image);
+                this::add_image
+        );
+        db = new DatabaseHandler(getContext());
     }
     void cleanForm(){
         title.setText("");

@@ -6,6 +6,10 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -95,6 +99,7 @@ public class PostData implements Serializable {
         creation_date = DATE_FORMAT.format(new Date());
         this.seller_location = location;
     }
+
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
@@ -109,9 +114,28 @@ public class PostData implements Serializable {
         return result;
     }
 
+    @Exclude
+    public Map<String, String> toMapStrings() {
+        HashMap<String, String> result = new HashMap<>();
+        result.put("uid", uid);
+        result.put("title", title);
+        result.put("price", price+"");
+        result.put("description", description);
+        result.put("starCount",starCount+"");
+        result.put("images", images.toString());
+        result.put("creation_date",creation_date);
+        result.put("seller_location",seller_location.toString());
+        return result;
+    }
+
     @NonNull
     public String toString(){
         return "Title: "+title+"\n"+"Description: "+description+"\n"+"Price: "+price+"\n"+"UserId: "
                 + uid +"\n"+"Images: "+images+"\n"+"Creation date: "+creation_date + "\nlocation: "+seller_location;
+    }
+
+    public JSONObject toJsonObject() throws JSONException {
+        String jsonInString = new Gson().toJson(this);
+        return new JSONObject(jsonInString);
     }
 }

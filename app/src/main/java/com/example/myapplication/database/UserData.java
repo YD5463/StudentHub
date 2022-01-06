@@ -6,16 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserData {
-    public enum Gender{
-        MALE,
-        FEMALE,
-        DECLINE_TO_ANSWER
-    }
-    public String fullname, email, profile_image_url;
+
+    public enum Gender{ MALE, FEMALE, DECLINE_TO_ANSWER }
+    public String fullname, email, profile_image_url, phone_number, uid;
     public Gender gender;
     public boolean isAdmin;
-    public String phone_number;
-    public String uid;
 
     public UserData(){}
 
@@ -33,8 +28,8 @@ public class UserData {
         return fullname!=null ? fullname : "";
     }
 
-    public void setName(String fullname) {
-        this.fullname = fullname;
+    public void setName(String fullName) {
+        this.fullname = fullName;
     }
 
     public String getEmail() {
@@ -61,6 +56,7 @@ public class UserData {
         this.gender = gender;
     }
 
+    @Exclude
     public String getUserType() {
         return isAdmin? "Admin": "Regular User";
     }

@@ -22,7 +22,7 @@
     <!--My Account Fragment-->
     <fragment
         android:id="@+id/navigation_myAccount"
-        android:name="com.example.myapplication.my_profile.AccountFragment"
+        android:name="com.example.myapplication.my_profile.MyProfileFragment"
         android:label="@string/title_account"
         tools:layout="@layout/fragment_account" >
 <!--        <action-->
