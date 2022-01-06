@@ -83,19 +83,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            app:cardElevation="10dp"
-            app:cardCornerRadius="100dp">
+            app:cardCornerRadius="100dp"
+            app:cardElevation="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#eeeeee"
-                android:orientation="horizontal"
-                android:paddingHorizontal="25dp"
-                android:paddingVertical="5dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="25dp"
+                android:paddingVertical="5dp">
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="40dp"
@@ -114,8 +114,8 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:textAlignment="center">
 
@@ -158,6 +158,36 @@
             android:layout_width="match_parent"
             android:layout_height="200dp" />
 
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/reportPost"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:clickable="true"
+                    android:contentDescription="@string/report_post"
+                    android:focusable="true"
+                    android:src="@drawable/ic_baseline_report_24"
+                    android:tint="#FF0000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="REPORT POST" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
         <Button
             android:id="@+id/delete_post_btn"
             android:layout_width="match_parent"
@@ -165,8 +195,10 @@
             android:layout_margin="20dp"
             android:layout_marginTop="10dp"
             android:background="#006747"
+            android:textColor="@color/white"
             android:text="@string/delete_post"
             android:visibility="gone" />
+
     </LinearLayout>
 
 </ScrollView>

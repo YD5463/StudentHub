@@ -11,6 +11,7 @@ public class UserData {
     public String fullname, email, profile_image_url, phone_number, uid;
     public Gender gender;
     public boolean isAdmin;
+    public int reports;
 
     public UserData(){}
 
@@ -22,6 +23,8 @@ public class UserData {
         this.isAdmin = false;
         this.phone_number = phone_number;
         this.uid = uid;
+        reports = 0;
+
     }
 
     public String getName() {
@@ -77,6 +80,13 @@ public class UserData {
         this.uid = uid;
     }
 
+    public int getReports() {
+        return reports;
+    }
+
+    public void incrementReports() {
+        reports++;
+    }
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
