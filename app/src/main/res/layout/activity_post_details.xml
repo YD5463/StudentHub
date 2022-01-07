@@ -178,7 +178,7 @@
                     android:contentDescription="@string/report_post"
                     android:focusable="true"
                     android:src="@drawable/ic_baseline_report_24"
-                    android:tint="#FF0000" />
+                    app:tint="#FF0000" />
 
                 <TextView
                     android:layout_width="wrap_content"
