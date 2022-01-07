@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -89,6 +90,7 @@ public class PostDetails extends FragmentActivity {
     private void fetch_additional_data(String uid, String post_creation_time) {
         TextView seller_name = findViewById(R.id.seller_name);
         ImageView phone_icon = findViewById(R.id.call_seller_icon);
+        ImageView report_btn = findViewById(R.id.reportPost);
         Button delete_post_button = (Button) findViewById(R.id.delete_post_btn);
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
@@ -104,6 +106,16 @@ public class PostDetails extends FragmentActivity {
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse("tel:" + userData.phone_number));
                     startActivity(intent);
+                });
+                report_btn.setOnClickListener(v -> {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(v.getContext());
+                    alert.setTitle("Report Post");
+                    alert.setMessage("Are you sure you want to report this post?");
+                    alert.setPositiveButton(android.R.string.yes, (dialog, which) ->
+                            Toast.makeText(getApplication(), "You have reported this post.",Toast.LENGTH_SHORT).show());
+                            userData.reports++;
+                    alert.setNegativeButton(android.R.string.no, (dialog, which) -> dialog.cancel());
+                    alert.show();
                 });
                 new DownloadImageTask(findViewById(R.id.seller_profile_image)).execute(userData.profile_image_url);
                 assert firebaseUser != null;
