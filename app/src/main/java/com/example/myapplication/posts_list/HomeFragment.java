@@ -50,6 +50,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         setHasOptionsMenu(true);
         View root = binding.getRoot();
 
+        
         recycler_view = root.findViewById(R.id.posts);
         progress_bar = root.findViewById(R.id.progress_bar_home);
         database = FirebaseDatabase.getInstance().getReference();
